@@ -8,10 +8,10 @@ public class LiveFootballWorldCupScoreBoardLibrary {
     public void getScoreboard() {
     }
 
-    public void updateScore(int homeTeamGoals, int guestTeamGoals){
+    public void updateScore(String homeTeamName, int homeTeamGoals, String guestTeamName, int guestTeamGoals){
     }
 
-    public void finishGameCurrentlyInProgress(){
+    public void finishGame(String homeTeamName, String guestTeamName){
     }
 
     public void getASummary(){

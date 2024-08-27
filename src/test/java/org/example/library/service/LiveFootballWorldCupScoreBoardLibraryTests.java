@@ -40,7 +40,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     @Test
     void updateScoreShouldFailForNonexistentMatch() {
         scoreBoardLibrary.addNewGame("home team", "away team");
-//        assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("alone team", 0,"new team", 1));
+        //assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("alone team", 0,"new team", 1));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     @Test
     void updateScoreShouldHandleNegativeScoresGracefully() {
         scoreBoardLibrary.addNewGame("home team", "away team");
-//        assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("home team", -10,"away team", -1));
+        //assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("home team", -10,"away team", -1));
     }
 
     @Test

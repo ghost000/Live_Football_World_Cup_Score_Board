@@ -13,8 +13,72 @@
 - Finish a game and remove it from the scoreboard.
 - Retrieve a summary of all ongoing games, sorted by total score and start time.
 
+## Setup
+
+Requirements:
+- Java 22
+- Maven
+- internet connection
+
+To clean compiles the source code, runs the tests and install run 
+
+```bash
+mvn clean install
+```
+
+## Usage
+
+```java
+import org.example.library.service;
+
+public class Main {
+    public static void main(String[] args) {
+      LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
+
+        // Start a new match
+        scoreBoardLibrary.startMatch("home team", "away team");
+
+        // Update the score
+        scoreBoardLibrary.updateScore("home team", "away team", 1, 1);
+
+        // Get a summary of matches
+        List<Game> summary = scoreBoardLibrary.getASummary();
+
+        // Finish the match
+        scoreBoardLibrary.finishGame("home team", "away team");
+    }
+}
+```
+## Tests
+
+Command for run unit tests
+
+```bash
+mvn test
+```
+
+## Installation
+Add bellow code to `pom.xml`
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.example</groupId>
+        <artifactId>Live_Football_World_Cup_Score_Board</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+
+
+## License
+The MIT License (MIT)
+
 ## ToDo
-- [x] (code) validation
-  -    params validation ( == null, .isBlank(), < 0, Objects.requireNonNull, Optional.ofNullable => IllegalArgumentException("ERROR")
-- [x] (test) @BeforeEach void setUp() { new } 
-- [x] (code) find object.values().stream().filter(object -> object.filter().equalsIgnoreCase(filter)).collect(Collectors.toList())
+- [ ] Add logging system
+- [ ] Add support for multithreading
+- [ ] Add better error / exception handling
+- [ ] Add JavaDoc documentation
+- [ ] Add static code analysis
+- [ ] Add profiling tests / analysis
+- [ ] Think about performance / scalability / persistence (DB)

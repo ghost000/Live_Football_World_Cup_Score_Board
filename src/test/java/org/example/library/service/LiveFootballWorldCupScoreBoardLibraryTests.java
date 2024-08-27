@@ -40,7 +40,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     @Test
     void updateScoreShouldFailForNonexistentMatch() {
         scoreBoardLibrary.addNewGame("home team", "away team");
-        //assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("alone team", 0,"new team", 1));
+        assertThrows(IllegalArgumentException.class, () -> { scoreBoardLibrary.updateScore("alone team", 0,"new team", 1); });
     }
 
     @Test
@@ -59,7 +59,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     @Test
     void updateScoreShouldHandleNegativeScoresGracefully() {
         scoreBoardLibrary.addNewGame("home team", "away team");
-        //assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("home team", -10,"away team", -1));
+        assertThrows(IllegalArgumentException.class, () -> { scoreBoardLibrary.updateScore("home team", -10,"away team", -1); });
     }
 
     @Test
@@ -185,5 +185,57 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         assertEquals(1, scoreBoard.size());
         assertEquals(0, scoreBoard.getFirst().getScore().getHomeTeamGoals());
         assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
+    }
+
+    @Test
+    void addNewGameShouldThrowExceptionForIdenticalTeamNames() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.addNewGame("TeamA", "TeamA");
+        });
+    }
+
+    @Test
+    void addNewGameShouldThrowExceptionForNullTeamNames() {
+        assertThrows(NullPointerException.class, () -> {
+            scoreBoardLibrary.addNewGame(null, "TeamB");
+        });
+        assertThrows(NullPointerException.class, () -> {
+            scoreBoardLibrary.addNewGame("TeamA", null);
+        });
+    }
+
+    @Test
+    void updateScoreShouldThrowExceptionForNegativeScores() {
+        scoreBoardLibrary.addNewGame("TeamA", "TeamB");
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.updateScore("TeamA", -1, "TeamB", 3);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.updateScore("TeamA", 2, "TeamB", -3);
+        });
+    }
+
+    @Test
+    void updateScoreShouldThrowExceptionForNonExistentGame() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.updateScore("TeamA", 1, "TeamB", 2);
+        });
+    }
+
+    @Test
+    void finishGameShouldThrowExceptionForNonExistentGame() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.finishGame("TeamA", "TeamB");
+        });
+    }
+
+    @Test
+    void finishGameShouldThrowExceptionForNullTeamNames() {
+        assertThrows(NullPointerException.class, () -> {
+            scoreBoardLibrary.finishGame(null, "TeamB");
+        });
+        assertThrows(NullPointerException.class, () -> {
+            scoreBoardLibrary.finishGame("TeamA", null);
+        });
     }
 }

@@ -14,7 +14,7 @@
 - Retrieve a summary of all ongoing games, sorted by total score and start time.
 
 ## ToDo
-- [ ] (code) validation
+- [x] (code) validation
   -    params validation ( == null, .isBlank(), < 0, Objects.requireNonNull, Optional.ofNullable => IllegalArgumentException("ERROR")
 - [x] (test) @BeforeEach void setUp() { new } 
 - [x] (code) find object.values().stream().filter(object -> object.filter().equalsIgnoreCase(filter)).collect(Collectors.toList())

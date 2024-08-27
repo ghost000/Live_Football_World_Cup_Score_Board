@@ -1,6 +1,7 @@
 package org.example.library.service;
 
 import org.example.library.model.Game;
+import org.example.library.utils.Validator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +14,7 @@ public class LiveFootballWorldCupScoreBoardLibrary {
     private final List<Game> games = new ArrayList<>();
 
     public void addNewGame(String homeTeamName, String guestTeamName) {
+        Validator.validateTeamNames(homeTeamName, guestTeamName);
         games.add(new Game(homeTeamName, guestTeamName, System.nanoTime()));
     }
 
@@ -25,11 +27,27 @@ public class LiveFootballWorldCupScoreBoardLibrary {
     }
 
     public void updateScore(String homeTeamName, int homeTeamGoals, String guestTeamName, int guestTeamGoals) {
-        getGame(homeTeamName, guestTeamName).ifPresent(game1 -> game1.getScore().updateScore(homeTeamGoals, guestTeamGoals));
+        Validator.validateTeamNames(homeTeamName, guestTeamName);
+        Validator.validateScore(homeTeamGoals, "Home");
+        Validator.validateScore(guestTeamGoals, "Guest");
+
+        Optional<Game> optionalGame = getGame(homeTeamName, guestTeamName);
+        Game game = optionalGame.orElseThrow(() ->
+                new IllegalArgumentException("Game not found between " + homeTeamName + " and " + guestTeamName)
+        );
+
+        game.getScore().updateScore(homeTeamGoals, guestTeamGoals);
     }
 
     public void finishGame(String homeTeamName, String guestTeamName) {
-        games.removeIf(game -> game.getHomeTeamName().equals(homeTeamName) && game.getGuestTeamName().equals(guestTeamName));
+        Validator.validateTeamNames(homeTeamName, guestTeamName);
+
+        Optional<Game> optionalGame = getGame(homeTeamName, guestTeamName);
+        Game game = optionalGame.orElseThrow(() ->
+                new IllegalArgumentException("Game not found between " + homeTeamName + " and " + guestTeamName)
+        );
+
+        games.remove(game);
     }
 
     public List<Game> getASummary() {

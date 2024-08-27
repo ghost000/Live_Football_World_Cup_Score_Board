@@ -3,8 +3,6 @@ package org.example.library.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTests {
@@ -13,7 +11,7 @@ class GameTests {
 
     @BeforeEach
     void setUp() {
-        game = new Game("Home Team", "Guest Team");
+        game = new Game("Home Team", "Guest Team", System.nanoTime());
     }
 
     @Test
@@ -29,13 +27,6 @@ class GameTests {
         assertEquals(0, game.getScore().getGuestTeamGoals());
 
         assertNotNull(game.getStartTime());
-    }
-
-    @Test
-    void testSetStartTime() {
-        LocalDateTime newStartTime = LocalDateTime.of(2024, 8, 23, 10, 0);
-        game.setStartTime(newStartTime);
-        assertEquals(newStartTime, game.getStartTime());
     }
 
     @Test

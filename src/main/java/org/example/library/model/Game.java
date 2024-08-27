@@ -1,24 +1,21 @@
 package org.example.library.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class Game {
     private final String homeTeamName;
     private final String guestTeamName;
     private final Score score = new Score();
-    private LocalDateTime startTime = LocalDateTime.now();
+    private final long startTime;
 
-    public Game(String homeTeamName, String guestTeamName) {
+    public Game(String homeTeamName, String guestTeamName, Long startTime) {
         this.homeTeamName = homeTeamName;
         this.guestTeamName = guestTeamName;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
     }
 
     public String getHomeTeamName() {

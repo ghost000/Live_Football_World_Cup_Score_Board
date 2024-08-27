@@ -1,21 +1,26 @@
 package org.example.library.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ScoreTest {
+class ScoreTests {
+    private Score score;
+
+    @BeforeEach
+    void setUp() {
+        score = new Score();
+    }
 
     @Test
     void testDefaultConstructor() {
-        Score score = new Score();
-
         assertEquals(0, score.getHomeTeamGoals());
         assertEquals(0, score.getGuestTeamGoals());
     }
 
     @Test
     void testUpdateScore() {
-        Score score = new Score();
         score.updateScore(3, 2);
 
         assertEquals(3, score.getHomeTeamGoals());
@@ -25,7 +30,6 @@ class ScoreTest {
 
     @Test
     void testGetTotalScore() {
-        Score score = new Score();
         score.updateScore(4, 1);
 
         assertEquals(5, score.getTotalScore());

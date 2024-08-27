@@ -1,16 +1,22 @@
 package org.example.library.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LiveFootballWorldCupScoreBoardLibraryTests {
+    private LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary;
+
+    @BeforeEach
+    void setUp() {
+        scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
+    }
 
     @Test
     void shouldCreateLibrary() {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
-
-        scoreBoardLibrary.addNewGame("home team","away team");
-        scoreBoardLibrary.updateScore("home team", 0,"away team", 1);
+        scoreBoardLibrary.addNewGame("home team", "away team");
+        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());
@@ -20,11 +26,9 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     }
 
     @Test
-    void updateScoreShouldCorrectlyUpdateOngoingMatch () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
-
-        scoreBoardLibrary.addNewGame("home team","away team");
-        scoreBoardLibrary.updateScore("home team", 2,"away team", 1);
+    void updateScoreShouldCorrectlyUpdateOngoingMatch() {
+        scoreBoardLibrary.addNewGame("home team", "away team");
+        scoreBoardLibrary.updateScore("home team", 2, "away team", 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());
@@ -34,21 +38,16 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     }
 
     @Test
-    void updateScoreShouldFailForNonexistentMatch () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
-
-        scoreBoardLibrary.addNewGame("home team","away team");
+    void updateScoreShouldFailForNonexistentMatch() {
+        scoreBoardLibrary.addNewGame("home team", "away team");
 //        assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("alone team", 0,"new team", 1));
     }
 
     @Test
-    void updateScoreShouldAllowLoweringScore () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
-
-        scoreBoardLibrary.addNewGame("home team","away team");
-        scoreBoardLibrary.updateScore("home team", 3,"away team", 2);
-        scoreBoardLibrary.updateScore("home team", 2,"away team", 1);
-
+    void updateScoreShouldAllowLoweringScore() {
+        scoreBoardLibrary.addNewGame("home team", "away team");
+        scoreBoardLibrary.updateScore("home team", 3, "away team", 2);
+        scoreBoardLibrary.updateScore("home team", 2, "away team", 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());
@@ -58,30 +57,27 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     }
 
     @Test
-    void updateScoreShouldHandleNegativeScoresGracefully () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
-        scoreBoardLibrary.addNewGame("home team","away team");
+    void updateScoreShouldHandleNegativeScoresGracefully() {
+        scoreBoardLibrary.addNewGame("home team", "away team");
 //        assertThrows(IllegalArgumentException.class, scoreBoardLibrary.updateScore("home team", -10,"away team", -1));
     }
 
     @Test
-    void getSummaryShouldReturnGamesInCorrectOrder () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
+    void getSummaryShouldReturnGamesInCorrectOrder() {
+        scoreBoardLibrary.addNewGame("Mexico", "Canada");
+        scoreBoardLibrary.updateScore("Mexico", 0, "Canada", 5);
 
-        scoreBoardLibrary.addNewGame("Mexico","Canada");
-        scoreBoardLibrary.updateScore("Mexico", 0,"Canada", 5);
+        scoreBoardLibrary.addNewGame("Spain", "Brazil");
+        scoreBoardLibrary.updateScore("Spain", 10, "Brazil", 2);
 
-        scoreBoardLibrary.addNewGame("Spain","Brazil");
-        scoreBoardLibrary.updateScore("Spain", 10,"Brazil", 2);
+        scoreBoardLibrary.addNewGame("Germany", "France");
+        scoreBoardLibrary.updateScore("Germany", 2, "France", 2);
 
-        scoreBoardLibrary.addNewGame("Germany","France");
-        scoreBoardLibrary.updateScore("Germany", 2,"France", 2);
+        scoreBoardLibrary.addNewGame("Uruguay", "Italy");
+        scoreBoardLibrary.updateScore("Uruguay", 6, "Italy", 6);
 
-        scoreBoardLibrary.addNewGame("Uruguay","Italy");
-        scoreBoardLibrary.updateScore("Uruguay", 6,"Italy", 6);
-
-        scoreBoardLibrary.addNewGame("Argentina","Australia");
-        scoreBoardLibrary.updateScore("Argentina", 3,"Australia", 1);
+        scoreBoardLibrary.addNewGame("Argentina", "Australia");
+        scoreBoardLibrary.updateScore("Argentina", 3, "Australia", 1);
 
         var collection = scoreBoardLibrary.getASummary();
 
@@ -104,20 +100,18 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     }
 
     @Test
-    void finishGameShouldRemoveMatchFromScoreboard () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
+    void finishGameShouldRemoveMatchFromScoreboard() {
+        scoreBoardLibrary.addNewGame("home team 1", "away team 1");
+        scoreBoardLibrary.addNewGame("home team 2", "away team 2");
+        scoreBoardLibrary.addNewGame("home team 3", "away team 3");
 
-        scoreBoardLibrary.addNewGame("home team 1","away team 1");
-        scoreBoardLibrary.addNewGame("home team 2","away team 2");
-        scoreBoardLibrary.addNewGame("home team 3","away team 3");
-
-        scoreBoardLibrary.updateScore("home team 1", 1,"away team 1", 1);
-        scoreBoardLibrary.updateScore("home team 2", 2,"away team 2", 2);
-        scoreBoardLibrary.updateScore("home team 3", 3,"away team 3", 3);
+        scoreBoardLibrary.updateScore("home team 1", 1, "away team 1", 1);
+        scoreBoardLibrary.updateScore("home team 2", 2, "away team 2", 2);
+        scoreBoardLibrary.updateScore("home team 3", 3, "away team 3", 3);
 
         scoreBoardLibrary.getScoreboard();
 
-        scoreBoardLibrary.finishGame("home team 2","away team 2");
+        scoreBoardLibrary.finishGame("home team 2", "away team 2");
 
         var collection = scoreBoardLibrary.getASummary();
 
@@ -131,32 +125,31 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     }
 
     @Test
-    void updateScoreShouldHandleMultipleMatchesSimultaneously () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
-        scoreBoardLibrary.addNewGame("Mexico","Canada");
-        scoreBoardLibrary.addNewGame("Spain","Brazil");
-        scoreBoardLibrary.addNewGame("Germany","France");
-        scoreBoardLibrary.addNewGame("Uruguay","Italy");
-        scoreBoardLibrary.addNewGame("Argentina","Australia");
+    void updateScoreShouldHandleMultipleMatchesSimultaneously() {
+        scoreBoardLibrary.addNewGame("Mexico", "Canada");
+        scoreBoardLibrary.addNewGame("Spain", "Brazil");
+        scoreBoardLibrary.addNewGame("Germany", "France");
+        scoreBoardLibrary.addNewGame("Uruguay", "Italy");
+        scoreBoardLibrary.addNewGame("Argentina", "Australia");
 
-        scoreBoardLibrary.updateScore("Mexico", 2,"Canada", 6);
-        scoreBoardLibrary.updateScore("Spain", 11,"Brazil", 3);
-        scoreBoardLibrary.updateScore("Germany", 3,"France", 4);
-        scoreBoardLibrary.updateScore("Uruguay", 7,"Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 4,"Australia", 5);
+        scoreBoardLibrary.updateScore("Mexico", 2, "Canada", 6);
+        scoreBoardLibrary.updateScore("Spain", 11, "Brazil", 3);
+        scoreBoardLibrary.updateScore("Germany", 3, "France", 4);
+        scoreBoardLibrary.updateScore("Uruguay", 7, "Italy", 6);
+        scoreBoardLibrary.updateScore("Argentina", 4, "Australia", 5);
 
-        scoreBoardLibrary.updateScore("Mexico", 3,"Canada", 7);
-        scoreBoardLibrary.updateScore("Spain", 14,"Brazil", 4);
-        scoreBoardLibrary.updateScore("Germany", 4,"France", 5);
-        scoreBoardLibrary.updateScore("Uruguay", 8,"Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 5,"Australia", 5);
+        scoreBoardLibrary.updateScore("Mexico", 3, "Canada", 7);
+        scoreBoardLibrary.updateScore("Spain", 14, "Brazil", 4);
+        scoreBoardLibrary.updateScore("Germany", 4, "France", 5);
+        scoreBoardLibrary.updateScore("Uruguay", 8, "Italy", 6);
+        scoreBoardLibrary.updateScore("Argentina", 5, "Australia", 5);
 
 
-        scoreBoardLibrary.updateScore("Mexico", 5,"Canada", 7);
-        scoreBoardLibrary.updateScore("Spain", 15,"Brazil", 7);
-        scoreBoardLibrary.updateScore("Germany", 5,"France", 6);
-        scoreBoardLibrary.updateScore("Uruguay", 9,"Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 6,"Australia", 5);
+        scoreBoardLibrary.updateScore("Mexico", 5, "Canada", 7);
+        scoreBoardLibrary.updateScore("Spain", 15, "Brazil", 7);
+        scoreBoardLibrary.updateScore("Germany", 5, "France", 6);
+        scoreBoardLibrary.updateScore("Uruguay", 9, "Italy", 6);
+        scoreBoardLibrary.updateScore("Argentina", 6, "Australia", 5);
 
         var collection = scoreBoardLibrary.getASummary();
 
@@ -179,15 +172,14 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     }
 
     @Test
-    void updateScoreShouldNotChangeWhenSameScoreIsGiven () {
-        LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
-        scoreBoardLibrary.addNewGame("home team","away team");
-        scoreBoardLibrary.updateScore("home team", 0,"away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0,"away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0,"away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0,"away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0,"away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0,"away team", 1);
+    void updateScoreShouldNotChangeWhenSameScoreIsGiven() {
+        scoreBoardLibrary.addNewGame("home team", "away team");
+        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());

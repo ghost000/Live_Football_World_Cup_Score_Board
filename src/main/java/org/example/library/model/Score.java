@@ -1,7 +1,5 @@
 package org.example.library.model;
 
-import java.time.LocalDateTime;
-
 public class Score {
     private int homeTeamGoals = 0;
     private int guestTeamGoals = 0;

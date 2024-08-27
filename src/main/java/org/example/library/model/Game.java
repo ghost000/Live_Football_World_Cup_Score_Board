@@ -1,7 +1,5 @@
 package org.example.library.model;
 
-import java.time.Instant;
-
 public class Game {
     private final String homeTeamName;
     private final String guestTeamName;

@@ -12,3 +12,10 @@
 - Update the score with the current goals for both teams.
 - Finish a game and remove it from the scoreboard.
 - Retrieve a summary of all ongoing games, sorted by total score and start time.
+
+## ToDo
+- [ ] (code) 
+  -    params validation ( == null, .isBlank(), < 0, Objects.requireNonNull, Optional.ofNullable => IllegalArgumentException("ERROR")
+- [ ] (test) @BeforeEach void setUp() { new } 
+- [ ] (code) find object.values().stream().filter(object -> object.filter().equalsIgnoreCase(filter)).collect(Collectors.toList())
+- 

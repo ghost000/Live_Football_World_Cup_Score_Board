@@ -16,9 +16,4 @@ public class Score {
         this.guestTeamGoals = guestTeamGoals;
         this.homeTeamGoals = homeTeamGoals;
     }
-
-    public int getTotalScore() {
-        return this.homeTeamGoals + this.guestTeamGoals;
-    }
-
 }

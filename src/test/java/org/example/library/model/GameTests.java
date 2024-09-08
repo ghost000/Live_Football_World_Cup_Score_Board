@@ -34,7 +34,7 @@ class GameTests {
         game.getScore().updateScore(2, 3);
         assertEquals(2, game.getScore().getHomeTeamGoals());
         assertEquals(3, game.getScore().getGuestTeamGoals());
-        assertEquals(5, game.getScore().getTotalScore());
+        assertEquals(5, game.getScore().getHomeTeamGoals() + game.getScore().getGuestTeamGoals());
     }
 
     @Test

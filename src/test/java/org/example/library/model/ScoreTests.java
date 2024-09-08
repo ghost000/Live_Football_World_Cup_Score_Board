@@ -25,13 +25,13 @@ class ScoreTests {
 
         assertEquals(3, score.getHomeTeamGoals());
         assertEquals(2, score.getGuestTeamGoals());
-        assertEquals(5, score.getTotalScore());
+        assertEquals(5, score.getHomeTeamGoals() + score.getGuestTeamGoals());
     }
 
     @Test
     void testGetTotalScore() {
         score.updateScore(4, 1);
 
-        assertEquals(5, score.getTotalScore());
+        assertEquals(5, score.getHomeTeamGoals() + score.getGuestTeamGoals());
     }
 }

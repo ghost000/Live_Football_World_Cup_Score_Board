@@ -5,11 +5,13 @@ public class Game {
     private final String guestTeamName;
     private final Score score = new Score();
     private final long startTime;
+    private final String id;
 
-    public Game(String homeTeamName, String guestTeamName, Long startTime) {
+    public Game(String homeTeamName, String guestTeamName, Long startTime, String id) {
         this.homeTeamName = homeTeamName;
         this.guestTeamName = guestTeamName;
         this.startTime = startTime;
+        this.id = id;
     }
 
     public long getStartTime() {
@@ -26,6 +28,10 @@ public class Game {
 
     public Score getScore() {
         return score;
+    }
+
+    public String getID() {
+        return id;
     }
 
     @Override

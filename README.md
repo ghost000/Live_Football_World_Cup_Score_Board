@@ -89,7 +89,7 @@ The MIT License (MIT)
 - [ ] Lacks use of design patterns.
 - [ ] Score class is mutable whereas Game is immutable. Seems inconsistent. 
 - [x] getTotalScore() doesn't really belong on Score as is only ever used by the sorting logic and can be calculated there.
-- [ ] Cumbersome API which requires passing of team names, when addNewGame() could have returned a match ID which other methods could have used.
+- [x] Cumbersome API which requires passing of team names, when addNewGame() could have returned a match ID which other methods could have used.
 - [ ] LiveFootballWorldCupScoreBoardLibrary.getScoreboard() is only ever used in tests.
 - [ ] Use of System.nanoTime() to store insert order on match isn't ideal. It's possible to add matches so fast that they share the same timestamp. Use of a simple AtomicInteger would have made this more robust.
 - [ ] Validator.validateTeamName() is public even though it's not used externally.

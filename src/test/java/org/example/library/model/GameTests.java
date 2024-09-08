@@ -2,6 +2,7 @@ package org.example.library.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,7 @@ class GameTests {
 
     @BeforeEach
     void setUp() {
-        game = new Game("Home Team", "Guest Team", System.nanoTime());
+        game = new Game("Home Team", "Guest Team", System.nanoTime(), UUID.randomUUID().toString());
     }
 
     @Test

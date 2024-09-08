@@ -8,14 +8,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class LiveFootballWorldCupScoreBoardLibrary {
 
     private final List<Game> games = new ArrayList<>();
 
-    public void addNewGame(String homeTeamName, String guestTeamName) {
+    public String addNewGame(String homeTeamName, String guestTeamName) {
         Validator.validateTeamNames(homeTeamName, guestTeamName);
-        games.add(new Game(homeTeamName, guestTeamName, System.nanoTime()));
+        final String id = UUID.randomUUID().toString();
+        games.add(new Game(homeTeamName, guestTeamName, System.nanoTime(), id));
+        return id;
     }
 
     public List<Game> getScoreboard() {
@@ -26,25 +29,22 @@ public class LiveFootballWorldCupScoreBoardLibrary {
         return new ArrayList<>(games);
     }
 
-    public void updateScore(String homeTeamName, int homeTeamGoals, String guestTeamName, int guestTeamGoals) {
-        Validator.validateTeamNames(homeTeamName, guestTeamName);
+    public void updateScore(String id, int homeTeamGoals, int guestTeamGoals) {
         Validator.validateScore(homeTeamGoals, "Home");
         Validator.validateScore(guestTeamGoals, "Guest");
 
-        Optional<Game> optionalGame = getGame(homeTeamName, guestTeamName);
+        Optional<Game> optionalGame = getGame(id);
         Game game = optionalGame.orElseThrow(() ->
-                new IllegalArgumentException("Game not found between " + homeTeamName + " and " + guestTeamName)
+                new IllegalArgumentException("Game with ID: " + id + " was not found.")
         );
 
         game.getScore().updateScore(homeTeamGoals, guestTeamGoals);
     }
 
-    public void finishGame(String homeTeamName, String guestTeamName) {
-        Validator.validateTeamNames(homeTeamName, guestTeamName);
-
-        Optional<Game> optionalGame = getGame(homeTeamName, guestTeamName);
+    public void finishGame(String id) {
+        Optional<Game> optionalGame = getGame(id);
         Game game = optionalGame.orElseThrow(() ->
-                new IllegalArgumentException("Game not found between " + homeTeamName + " and " + guestTeamName)
+                new IllegalArgumentException("Game with ID: " + id + " was not found.")
         );
 
         games.remove(game);
@@ -54,7 +54,7 @@ public class LiveFootballWorldCupScoreBoardLibrary {
         return games.stream().sorted(Comparator.comparingInt((Game game) -> game.getScore().getHomeTeamGoals() + game.getScore().getGuestTeamGoals()).reversed().thenComparing(Game::getStartTime, Comparator.reverseOrder())).collect(Collectors.toList());
     }
 
-    private Optional<Game> getGame(String homeTeamName, String guestTeamName) {
-        return games.stream().filter(game -> game.getHomeTeamName().equals(homeTeamName) && game.getGuestTeamName().equals(guestTeamName)).findFirst();
+    private Optional<Game> getGame(String id) {
+        return games.stream().filter(game -> game.getID().equals(id)).findFirst();
     }
 }

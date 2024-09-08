@@ -15,8 +15,8 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @Test
     void shouldCreateLibrary() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 0, 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());
@@ -27,8 +27,8 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @Test
     void updateScoreShouldCorrectlyUpdateOngoingMatch() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 2, "away team", 1);
+        final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 2, 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());
@@ -39,15 +39,17 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @Test
     void updateScoreShouldFailForNonexistentMatch() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        assertThrows(IllegalArgumentException.class, () -> { scoreBoardLibrary.updateScore("alone team", 0,"new team", 1); });
+        final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.updateScore("NonExistentGameID", 0, 1);
+        });
     }
 
     @Test
     void updateScoreShouldAllowLoweringScore() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 3, "away team", 2);
-        scoreBoardLibrary.updateScore("home team", 2, "away team", 1);
+        final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 3, 2);
+        scoreBoardLibrary.updateScore(id, 2, 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());
@@ -58,26 +60,28 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @Test
     void updateScoreShouldHandleNegativeScoresGracefully() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        assertThrows(IllegalArgumentException.class, () -> { scoreBoardLibrary.updateScore("home team", -10,"away team", -1); });
+        final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.updateScore(id, -10, -1);
+        });
     }
 
     @Test
     void getSummaryShouldReturnGamesInCorrectOrder() {
-        scoreBoardLibrary.addNewGame("Mexico", "Canada");
-        scoreBoardLibrary.updateScore("Mexico", 0, "Canada", 5);
+        final String id_1 = scoreBoardLibrary.addNewGame("Mexico", "Canada" );
+        scoreBoardLibrary.updateScore(id_1, 0, 5);
 
-        scoreBoardLibrary.addNewGame("Spain", "Brazil");
-        scoreBoardLibrary.updateScore("Spain", 10, "Brazil", 2);
+        final String id_2 = scoreBoardLibrary.addNewGame("Spain", "Brazil" );
+        scoreBoardLibrary.updateScore(id_2, 10, 2);
 
-        scoreBoardLibrary.addNewGame("Germany", "France");
-        scoreBoardLibrary.updateScore("Germany", 2, "France", 2);
+        final String id_3 = scoreBoardLibrary.addNewGame("Germany", "France" );
+        scoreBoardLibrary.updateScore(id_3, 2, 2);
 
-        scoreBoardLibrary.addNewGame("Uruguay", "Italy");
-        scoreBoardLibrary.updateScore("Uruguay", 6, "Italy", 6);
+        final String id_4 = scoreBoardLibrary.addNewGame("Uruguay", "Italy" );
+        scoreBoardLibrary.updateScore(id_4, 6, 6);
 
-        scoreBoardLibrary.addNewGame("Argentina", "Australia");
-        scoreBoardLibrary.updateScore("Argentina", 3, "Australia", 1);
+        final String id_5 = scoreBoardLibrary.addNewGame("Argentina", "Australia" );
+        scoreBoardLibrary.updateScore(id_5, 3, 1);
 
         var collection = scoreBoardLibrary.getASummary();
 
@@ -101,17 +105,17 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @Test
     void finishGameShouldRemoveMatchFromScoreboard() {
-        scoreBoardLibrary.addNewGame("home team 1", "away team 1");
-        scoreBoardLibrary.addNewGame("home team 2", "away team 2");
-        scoreBoardLibrary.addNewGame("home team 3", "away team 3");
+        final String id_1 = scoreBoardLibrary.addNewGame("home team 1", "away team 1" );
+        final String id_2 = scoreBoardLibrary.addNewGame("home team 2", "away team 2" );
+        final String id_3 = scoreBoardLibrary.addNewGame("home team 3", "away team 3" );
 
-        scoreBoardLibrary.updateScore("home team 1", 1, "away team 1", 1);
-        scoreBoardLibrary.updateScore("home team 2", 2, "away team 2", 2);
-        scoreBoardLibrary.updateScore("home team 3", 3, "away team 3", 3);
+        scoreBoardLibrary.updateScore(id_1, 1, 1);
+        scoreBoardLibrary.updateScore(id_2, 2, 2);
+        scoreBoardLibrary.updateScore(id_3, 3, 3);
 
         scoreBoardLibrary.getScoreboard();
 
-        scoreBoardLibrary.finishGame("home team 2", "away team 2");
+        scoreBoardLibrary.finishGame(id_2);
 
         var collection = scoreBoardLibrary.getASummary();
 
@@ -126,30 +130,30 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @Test
     void updateScoreShouldHandleMultipleMatchesSimultaneously() {
-        scoreBoardLibrary.addNewGame("Mexico", "Canada");
-        scoreBoardLibrary.addNewGame("Spain", "Brazil");
-        scoreBoardLibrary.addNewGame("Germany", "France");
-        scoreBoardLibrary.addNewGame("Uruguay", "Italy");
-        scoreBoardLibrary.addNewGame("Argentina", "Australia");
+        final String id_1 = scoreBoardLibrary.addNewGame("Mexico", "Canada" );
+        final String id_2 = scoreBoardLibrary.addNewGame("Spain", "Brazil" );
+        final String id_3 = scoreBoardLibrary.addNewGame("Germany", "France" );
+        final String id_4 = scoreBoardLibrary.addNewGame("Uruguay", "Italy" );
+        final String id_5 = scoreBoardLibrary.addNewGame("Argentina", "Australia" );
 
-        scoreBoardLibrary.updateScore("Mexico", 2, "Canada", 6);
-        scoreBoardLibrary.updateScore("Spain", 11, "Brazil", 3);
-        scoreBoardLibrary.updateScore("Germany", 3, "France", 4);
-        scoreBoardLibrary.updateScore("Uruguay", 7, "Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 4, "Australia", 5);
+        scoreBoardLibrary.updateScore(id_1, 2, 6);
+        scoreBoardLibrary.updateScore(id_2, 11, 3);
+        scoreBoardLibrary.updateScore(id_3, 3, 4);
+        scoreBoardLibrary.updateScore(id_4, 7, 6);
+        scoreBoardLibrary.updateScore(id_5, 4, 5);
 
-        scoreBoardLibrary.updateScore("Mexico", 3, "Canada", 7);
-        scoreBoardLibrary.updateScore("Spain", 14, "Brazil", 4);
-        scoreBoardLibrary.updateScore("Germany", 4, "France", 5);
-        scoreBoardLibrary.updateScore("Uruguay", 8, "Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 5, "Australia", 5);
+        scoreBoardLibrary.updateScore(id_1, 3, 7);
+        scoreBoardLibrary.updateScore(id_2, 14, 4);
+        scoreBoardLibrary.updateScore(id_3, 4, 5);
+        scoreBoardLibrary.updateScore(id_4, 8, 6);
+        scoreBoardLibrary.updateScore(id_5, 5, 5);
 
 
-        scoreBoardLibrary.updateScore("Mexico", 5, "Canada", 7);
-        scoreBoardLibrary.updateScore("Spain", 15, "Brazil", 7);
-        scoreBoardLibrary.updateScore("Germany", 5, "France", 6);
-        scoreBoardLibrary.updateScore("Uruguay", 9, "Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 6, "Australia", 5);
+        scoreBoardLibrary.updateScore(id_1, 5, 7);
+        scoreBoardLibrary.updateScore(id_2, 15, 7);
+        scoreBoardLibrary.updateScore(id_3, 5, 6);
+        scoreBoardLibrary.updateScore(id_4, 9, 6);
+        scoreBoardLibrary.updateScore(id_5, 6, 5);
 
         var collection = scoreBoardLibrary.getASummary();
 
@@ -173,13 +177,13 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @Test
     void updateScoreShouldNotChangeWhenSameScoreIsGiven() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 0, 1);
+        scoreBoardLibrary.updateScore(id, 0, 1);
+        scoreBoardLibrary.updateScore(id, 0, 1);
+        scoreBoardLibrary.updateScore(id, 0, 1);
+        scoreBoardLibrary.updateScore(id, 0, 1);
+        scoreBoardLibrary.updateScore(id, 0, 1);
 
         var scoreBoard = scoreBoardLibrary.getScoreboard();
         assertEquals(1, scoreBoard.size());
@@ -190,52 +194,49 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     @Test
     void addNewGameShouldThrowExceptionForIdenticalTeamNames() {
         assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.addNewGame("TeamA", "TeamA");
+            final String id = scoreBoardLibrary.addNewGame("TeamA", "TeamA" );
         });
     }
 
     @Test
     void addNewGameShouldThrowExceptionForNullTeamNames() {
         assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.addNewGame(null, "TeamB");
+            final String id = scoreBoardLibrary.addNewGame(null, "TeamB" );
         });
         assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.addNewGame("TeamA", null);
+            final String id = scoreBoardLibrary.addNewGame("TeamA", null);
         });
     }
 
     @Test
     void updateScoreShouldThrowExceptionForNegativeScores() {
-        scoreBoardLibrary.addNewGame("TeamA", "TeamB");
+        final String id = scoreBoardLibrary.addNewGame("TeamA", "TeamB" );
         assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.updateScore("TeamA", -1, "TeamB", 3);
+            scoreBoardLibrary.updateScore(id, -1, 3);
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.updateScore("TeamA", 2, "TeamB", -3);
+            scoreBoardLibrary.updateScore(id, 2, -3);
         });
     }
 
     @Test
     void updateScoreShouldThrowExceptionForNonExistentGame() {
         assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.updateScore("TeamA", 1, "TeamB", 2);
+            scoreBoardLibrary.updateScore("NonExistentGameID", 1, 2);
         });
     }
 
     @Test
     void finishGameShouldThrowExceptionForNonExistentGame() {
         assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.finishGame("TeamA", "TeamB");
+            scoreBoardLibrary.finishGame("NonExistentGameID" );
         });
     }
 
     @Test
-    void finishGameShouldThrowExceptionForNullTeamNames() {
-        assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.finishGame(null, "TeamB");
-        });
-        assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.finishGame("TeamA", null);
+    void finishGameShouldThrowExceptionForNullTeamID() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            scoreBoardLibrary.finishGame(null);
         });
     }
 }

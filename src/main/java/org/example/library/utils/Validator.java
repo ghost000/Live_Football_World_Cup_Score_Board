@@ -21,7 +21,10 @@ public class Validator {
         validateTeamName(homeTeamName, "Home");
         validateTeamName(guestTeamName, "Guest");
 
-        if (homeTeamName.equalsIgnoreCase(guestTeamName)) {
+        final String normalizedHomeTeamName = homeTeamName.trim();
+        final String normalizedGuestTeamName = guestTeamName.trim();
+
+        if (normalizedHomeTeamName.equalsIgnoreCase(normalizedGuestTeamName)) {
             throw new IllegalArgumentException("Home team and guest team names must be different.");
         }
     }

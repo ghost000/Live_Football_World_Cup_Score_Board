@@ -44,6 +44,13 @@ public class ValidatorTests {
     }
 
     @Test
+    void validateTeamNamesShouldThrowExceptionWhenBothTeamsHaveAlmostTheSameName() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> Validator.validateTeamNames("England", "England "));
+        assertEquals("Home team and guest team names must be different.", exception.getMessage());
+    }
+
+    @Test
     void validateTeamNamesShouldPassWhenTeamNamesAreValidAndDifferent() {
         assertDoesNotThrow(() -> Validator.validateTeamNames("Germany", "France"));
     }

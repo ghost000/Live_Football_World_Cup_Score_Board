@@ -94,7 +94,7 @@ The MIT License (MIT)
 - [X] Use of System.nanoTime() to store insert order on match isn't ideal. It's possible to add matches so fast that they share the same timestamp. Use of a simple AtomicInteger would have made this more robust.
 - [X] Validator.validateTeamName() is public even though it's not used externally.
 - [X] Validator.validateNotNull() is only ever used in tests.
-- [ ] Validator.validateTeamNames() fails when comparing "England" against "England ".
+- [X] Validator.validateTeamNames() fails when comparing "England" against "England ".
 - [ ] Lacks validation. It's possible to start a game with team names containing whitespace, and even start a match with a team which is already playing.
 - [ ] Unusual naming e.g. getGuestTeamGoals() instead of Away, shouldCreateLibrary() test method which creates a scoreboard and not a library.
 - [ ] Too many asserts in some test scenarios.

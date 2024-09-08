@@ -6,25 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ValidatorTests {
     @Test
-    void validateTeamNameShouldThrowExceptionWhenNameIsNull() {
-        NullPointerException exception = assertThrows(NullPointerException.class,
-                () -> Validator.validateTeamName(null, "Home"));
-        assertEquals("Home team name cannot be null.", exception.getMessage());
-    }
-
-    @Test
-    void validateTeamNameShouldThrowExceptionWhenNameIsEmpty() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> Validator.validateTeamName(" ", "Guest"));
-        assertEquals("Guest team name cannot be empty.", exception.getMessage());
-    }
-
-    @Test
-    void validateTeamNameShouldPassWhenNameIsValid() {
-        assertDoesNotThrow(() -> Validator.validateTeamName("Spain", "Home"));
-    }
-
-    @Test
     void validateScoreShouldThrowExceptionWhenScoreIsNegative() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> Validator.validateScore(-1, "Home"));

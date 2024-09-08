@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Validator {
 
-    public static void validateTeamName(String teamName, String teamType) {
+    private static void validateTeamName(String teamName, String teamType) {
         Objects.requireNonNull(teamName, teamType + " team name cannot be null.");
         if (teamName.trim().isEmpty()) {
             throw new IllegalArgumentException(teamType + " team name cannot be empty.");

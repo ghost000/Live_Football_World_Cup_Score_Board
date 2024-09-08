@@ -82,3 +82,21 @@ The MIT License (MIT)
 - [ ] Add static code analysis
 - [ ] Add profiling tests / analysis
 - [ ] Think about performance / scalability / persistence (DB)
+
+## Tasks / comments from review
+- [ ] Redundant Score constructor.
+- [ ] Code is quite procedural, could be more maintainable and expressive using OO.
+- [ ] Lacks use of design patterns.
+- [ ] Score class is mutable whereas Game is immutable. Seems inconsistent. 
+- [ ] getTotalScore() doesn't really belong on Score as is only ever used by the sorting logic and can be calculated there.
+- [ ] Cumbersome API which requires passing of team names, when addNewGame() could have returned a match ID which other methods could have used.
+- [ ] LiveFootballWorldCupScoreBoardLibrary.getScoreboard() is only ever used in tests.
+- [ ] Use of System.nanoTime() to store insert order on match isn't ideal. It's possible to add matches so fast that they share the same timestamp. Use of a simple AtomicInteger would have made this more robust.
+- [ ] Validator.validateTeamName() is public even though it's not used externally.
+- [ ] Validator.validateNotNull() is only ever used in tests.
+- [ ] Validator.validateTeamNames() fails when comparing "England" against "England ".
+- [ ] Lacks validation. It's possible to start a game with team names containing whitespace, and even start a match with a team which is already playing.
+- [ ] Unusual naming e.g. getGuestTeamGoals() instead of Away, shouldCreateLibrary() test method which creates a scoreboard and not a library.
+- [ ] Too many asserts in some test scenarios.
+- [ ] Unit test methods are far too big and unmaintainable, too many asserts in each test method.
+- [ ] Test updateScoreShouldHandleMultipleMatchesSimultaneously() doesn't update matches in parallel, does so sequentially.

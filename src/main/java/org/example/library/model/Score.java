@@ -1,8 +1,13 @@
 package org.example.library.model;
 
-public class Score {
-    private int homeTeamGoals = 0;
-    private int awayTeamGoals = 0;
+public final class Score {
+    private final int homeTeamGoals;
+    private final int awayTeamGoals;
+
+    public Score(int homeTeamGoals, int awayTeamGoals) {
+        this.homeTeamGoals = homeTeamGoals;
+        this.awayTeamGoals = awayTeamGoals;
+    }
 
     public int getAwayTeamGoals() {
         return awayTeamGoals;
@@ -12,8 +17,7 @@ public class Score {
         return homeTeamGoals;
     }
 
-    public void updateScore(int homeTeamGoals, int awayTeamGoals) {
-        this.awayTeamGoals = awayTeamGoals;
-        this.homeTeamGoals = homeTeamGoals;
+    public Score updateScore(int homeTeamGoals, int awayTeamGoals) {
+        return new Score(homeTeamGoals, awayTeamGoals);
     }
 }

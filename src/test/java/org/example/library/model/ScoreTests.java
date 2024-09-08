@@ -10,7 +10,7 @@ class ScoreTests {
 
     @BeforeEach
     void setUp() {
-        score = new Score();
+        score = new Score(0,0);
     }
 
     @Test
@@ -21,7 +21,7 @@ class ScoreTests {
 
     @Test
     void testUpdateScore() {
-        score.updateScore(3, 2);
+        score = score.updateScore(3, 2);
 
         assertEquals(3, score.getHomeTeamGoals());
         assertEquals(2, score.getAwayTeamGoals());
@@ -30,7 +30,7 @@ class ScoreTests {
 
     @Test
     void testGetTotalScore() {
-        score.updateScore(4, 1);
+        score = score.updateScore(4, 1);
 
         assertEquals(5, score.getHomeTeamGoals() + score.getAwayTeamGoals());
     }

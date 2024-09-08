@@ -29,7 +29,7 @@ class GameTests {
 
     @Test
     void testUpdateScore() {
-        game.getScore().updateScore(2, 3);
+        game = game.updateScore(2,3);
         assertEquals(2, game.getScore().getHomeTeamGoals());
         assertEquals(3, game.getScore().getAwayTeamGoals());
         assertEquals(5, game.getScore().getHomeTeamGoals() + game.getScore().getAwayTeamGoals());
@@ -37,7 +37,7 @@ class GameTests {
 
     @Test
     void testToString() {
-        game.getScore().updateScore(2, 1);
+        game = game.updateScore(2, 1);
         String expectedString = " homeTeamName : Home Team getHomeTeamGoals : 2 -  awayTeamName : Away Team getAwayTeamGoals : 1";
         assertEquals(expectedString, game.toString());
     }

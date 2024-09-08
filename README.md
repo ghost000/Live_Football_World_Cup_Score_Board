@@ -87,7 +87,7 @@ The MIT License (MIT)
 - [x] Redundant Score constructor.
 - [ ] Code is quite procedural, could be more maintainable and expressive using OO.
 - [ ] Lacks use of design patterns.
-- [ ] Score class is mutable whereas Game is immutable. Seems inconsistent. 
+- [x] Score class is mutable whereas Game is immutable. Seems inconsistent. 
 - [x] getTotalScore() doesn't really belong on Score as is only ever used by the sorting logic and can be calculated there.
 - [x] Cumbersome API which requires passing of team names, when addNewGame() could have returned a match ID which other methods could have used.
 - [X] LiveFootballWorldCupScoreBoardLibrary.getScoreboard() is only ever used in tests.

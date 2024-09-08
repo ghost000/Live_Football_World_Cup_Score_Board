@@ -13,8 +13,15 @@ public final class Game {
     public Game(String homeTeamName, String awayTeamName) {
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
-        this.score = new Score();
+        this.score = new Score(0,0);
         this.id = idCounter.getAndIncrement();
+    }
+
+    public Game(String homeTeamName, String awayTeamName, Score score, int id) {
+        this.homeTeamName = homeTeamName;
+        this.awayTeamName = awayTeamName;
+        this.score = score;
+        this.id = id;
     }
 
     public String getHomeTeamName() {
@@ -31,6 +38,10 @@ public final class Game {
 
     public int getID() {
         return id;
+    }
+
+    public Game updateScore(int homeTeamGoals, int awayTeamGoals) {
+        return new Game(this.homeTeamName, this.awayTeamName, new Score(homeTeamGoals, awayTeamGoals), this.id);
     }
 
     @Override

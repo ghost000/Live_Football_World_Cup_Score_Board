@@ -18,11 +18,10 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
         scoreBoardLibrary.updateScore(id, 0, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(0, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
-        assertEquals(1, scoreBoardLibrary.getASummary().size());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(0, summary.getFirst().getScore().getHomeTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
     }
 
     @Test
@@ -30,11 +29,10 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         final String id = scoreBoardLibrary.addNewGame("home team", "away team" );
         scoreBoardLibrary.updateScore(id, 2, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(2, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
-        assertEquals(1, scoreBoardLibrary.getASummary().size());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(2, summary.getFirst().getScore().getHomeTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
     }
 
     @Test
@@ -51,11 +49,10 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         scoreBoardLibrary.updateScore(id, 3, 2);
         scoreBoardLibrary.updateScore(id, 2, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(2, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
-        assertEquals(1, scoreBoardLibrary.getASummary().size());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(2, summary.getFirst().getScore().getHomeTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
     }
 
     @Test
@@ -83,24 +80,24 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         final String id_5 = scoreBoardLibrary.addNewGame("Argentina", "Australia" );
         scoreBoardLibrary.updateScore(id_5, 3, 1);
 
-        var collection = scoreBoardLibrary.getASummary();
+        var summary = scoreBoardLibrary.getASummary();
 
         assertEquals(5, scoreBoardLibrary.getASummary().size());
 
-        assertEquals("Uruguay", collection.get(0).getHomeTeamName());
-        assertEquals("Italy", collection.get(0).getGuestTeamName());
+        assertEquals("Uruguay", summary.get(0).getHomeTeamName());
+        assertEquals("Italy", summary.get(0).getGuestTeamName());
 
-        assertEquals("Spain", collection.get(1).getHomeTeamName());
-        assertEquals("Brazil", collection.get(1).getGuestTeamName());
+        assertEquals("Spain", summary.get(1).getHomeTeamName());
+        assertEquals("Brazil", summary.get(1).getGuestTeamName());
 
-        assertEquals("Mexico", collection.get(2).getHomeTeamName());
-        assertEquals("Canada", collection.get(2).getGuestTeamName());
+        assertEquals("Mexico", summary.get(2).getHomeTeamName());
+        assertEquals("Canada", summary.get(2).getGuestTeamName());
 
-        assertEquals("Argentina", collection.get(3).getHomeTeamName());
-        assertEquals("Australia", collection.get(3).getGuestTeamName());
+        assertEquals("Argentina", summary.get(3).getHomeTeamName());
+        assertEquals("Australia", summary.get(3).getGuestTeamName());
 
-        assertEquals("Germany", collection.get(4).getHomeTeamName());
-        assertEquals("France", collection.get(4).getGuestTeamName());
+        assertEquals("Germany", summary.get(4).getHomeTeamName());
+        assertEquals("France", summary.get(4).getGuestTeamName());
     }
 
     @Test
@@ -113,19 +110,17 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         scoreBoardLibrary.updateScore(id_2, 2, 2);
         scoreBoardLibrary.updateScore(id_3, 3, 3);
 
-        scoreBoardLibrary.getScoreboard();
-
         scoreBoardLibrary.finishGame(id_2);
 
-        var collection = scoreBoardLibrary.getASummary();
+        var summary = scoreBoardLibrary.getASummary();
 
-        assertEquals(2, scoreBoardLibrary.getASummary().size());
+        assertEquals(2, summary.size());
 
-        assertEquals("home team 3", collection.get(0).getHomeTeamName());
-        assertEquals("away team 3", collection.get(0).getGuestTeamName());
+        assertEquals("home team 3", summary.get(0).getHomeTeamName());
+        assertEquals("away team 3", summary.get(0).getGuestTeamName());
 
-        assertEquals("home team 1", collection.get(1).getHomeTeamName());
-        assertEquals("away team 1", collection.get(1).getGuestTeamName());
+        assertEquals("home team 1", summary.get(1).getHomeTeamName());
+        assertEquals("away team 1", summary.get(1).getGuestTeamName());
     }
 
     @Test
@@ -155,24 +150,24 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         scoreBoardLibrary.updateScore(id_4, 9, 6);
         scoreBoardLibrary.updateScore(id_5, 6, 5);
 
-        var collection = scoreBoardLibrary.getASummary();
+        var summary = scoreBoardLibrary.getASummary();
 
-        assertEquals(5, scoreBoardLibrary.getASummary().size());
+        assertEquals(5, summary.size());
 
-        assertEquals("Spain", collection.get(0).getHomeTeamName());
-        assertEquals("Brazil", collection.get(0).getGuestTeamName());
+        assertEquals("Spain", summary.get(0).getHomeTeamName());
+        assertEquals("Brazil", summary.get(0).getGuestTeamName());
 
-        assertEquals("Uruguay", collection.get(1).getHomeTeamName());
-        assertEquals("Italy", collection.get(1).getGuestTeamName());
+        assertEquals("Uruguay", summary.get(1).getHomeTeamName());
+        assertEquals("Italy", summary.get(1).getGuestTeamName());
 
-        assertEquals("Mexico", collection.get(2).getHomeTeamName());
-        assertEquals("Canada", collection.get(2).getGuestTeamName());
+        assertEquals("Mexico", summary.get(2).getHomeTeamName());
+        assertEquals("Canada", summary.get(2).getGuestTeamName());
 
-        assertEquals("Argentina", collection.get(3).getHomeTeamName());
-        assertEquals("Australia", collection.get(3).getGuestTeamName());
+        assertEquals("Argentina", summary.get(3).getHomeTeamName());
+        assertEquals("Australia", summary.get(3).getGuestTeamName());
 
-        assertEquals("Germany", collection.get(4).getHomeTeamName());
-        assertEquals("France", collection.get(4).getGuestTeamName());
+        assertEquals("Germany", summary.get(4).getHomeTeamName());
+        assertEquals("France", summary.get(4).getGuestTeamName());
     }
 
     @Test
@@ -185,10 +180,10 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         scoreBoardLibrary.updateScore(id, 0, 1);
         scoreBoardLibrary.updateScore(id, 0, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(0, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(0, summary.getFirst().getScore().getHomeTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
     }
 
     @Test

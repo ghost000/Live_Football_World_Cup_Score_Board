@@ -21,14 +21,6 @@ public class LiveFootballWorldCupScoreBoardLibrary {
         return id;
     }
 
-    public List<Game> getScoreboard() {
-        // NOTICE
-        // Returning a copy of the list (return new ArrayList<>(games);) protects the internal state of the object from unintended changes by external code.
-        // Creating a new list reduces the risk of issues in a multi-threaded environment, ensuring that each thread works with its own copy of the data.
-        // Encapsulation and type safety are maintained because the original collection is not directly exposed.
-        return new ArrayList<>(games);
-    }
-
     public void updateScore(String id, int homeTeamGoals, int guestTeamGoals) {
         Validator.validateScore(homeTeamGoals, "Home");
         Validator.validateScore(guestTeamGoals, "Guest");

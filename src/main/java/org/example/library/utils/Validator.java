@@ -25,8 +25,4 @@ public class Validator {
             throw new IllegalArgumentException("Home team and guest team names must be different.");
         }
     }
-
-    public static <T> void validateNotNull(T object, String message) {
-        Objects.requireNonNull(object, message);
-    }
 }

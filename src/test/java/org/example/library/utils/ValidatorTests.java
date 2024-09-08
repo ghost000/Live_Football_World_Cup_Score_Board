@@ -47,16 +47,4 @@ public class ValidatorTests {
     void validateTeamNamesShouldPassWhenTeamNamesAreValidAndDifferent() {
         assertDoesNotThrow(() -> Validator.validateTeamNames("Germany", "France"));
     }
-
-    @Test
-    void validateNotNullShouldThrowExceptionWhenObjectIsNull() {
-        NullPointerException exception = assertThrows(NullPointerException.class,
-                () -> Validator.validateNotNull(null, "Object cannot be null."));
-        assertEquals("Object cannot be null.", exception.getMessage());
-    }
-
-    @Test
-    void validateNotNullShouldPassWhenObjectIsNotNull() {
-        assertDoesNotThrow(() -> Validator.validateNotNull("Non-null value", "Object cannot be null."));
-    }
 }

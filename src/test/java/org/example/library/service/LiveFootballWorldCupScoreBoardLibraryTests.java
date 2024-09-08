@@ -85,19 +85,19 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         assertEquals(5, scoreBoardLibrary.getASummary().size());
 
         assertEquals("Uruguay", summary.get(0).getHomeTeamName());
-        assertEquals("Italy", summary.get(0).getGuestTeamName());
+        assertEquals("Italy", summary.get(0).getAwayTeamName());
 
         assertEquals("Spain", summary.get(1).getHomeTeamName());
-        assertEquals("Brazil", summary.get(1).getGuestTeamName());
+        assertEquals("Brazil", summary.get(1).getAwayTeamName());
 
         assertEquals("Mexico", summary.get(2).getHomeTeamName());
-        assertEquals("Canada", summary.get(2).getGuestTeamName());
+        assertEquals("Canada", summary.get(2).getAwayTeamName());
 
         assertEquals("Argentina", summary.get(3).getHomeTeamName());
-        assertEquals("Australia", summary.get(3).getGuestTeamName());
+        assertEquals("Australia", summary.get(3).getAwayTeamName());
 
         assertEquals("Germany", summary.get(4).getHomeTeamName());
-        assertEquals("France", summary.get(4).getGuestTeamName());
+        assertEquals("France", summary.get(4).getAwayTeamName());
     }
 
     @Test
@@ -117,10 +117,10 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         assertEquals(2, summary.size());
 
         assertEquals("home team 3", summary.get(0).getHomeTeamName());
-        assertEquals("away team 3", summary.get(0).getGuestTeamName());
+        assertEquals("away team 3", summary.get(0).getAwayTeamName());
 
         assertEquals("home team 1", summary.get(1).getHomeTeamName());
-        assertEquals("away team 1", summary.get(1).getGuestTeamName());
+        assertEquals("away team 1", summary.get(1).getAwayTeamName());
     }
 
     @Test
@@ -155,19 +155,19 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         assertEquals(5, summary.size());
 
         assertEquals("Spain", summary.get(0).getHomeTeamName());
-        assertEquals("Brazil", summary.get(0).getGuestTeamName());
+        assertEquals("Brazil", summary.get(0).getAwayTeamName());
 
         assertEquals("Uruguay", summary.get(1).getHomeTeamName());
-        assertEquals("Italy", summary.get(1).getGuestTeamName());
+        assertEquals("Italy", summary.get(1).getAwayTeamName());
 
         assertEquals("Mexico", summary.get(2).getHomeTeamName());
-        assertEquals("Canada", summary.get(2).getGuestTeamName());
+        assertEquals("Canada", summary.get(2).getAwayTeamName());
 
         assertEquals("Argentina", summary.get(3).getHomeTeamName());
-        assertEquals("Australia", summary.get(3).getGuestTeamName());
+        assertEquals("Australia", summary.get(3).getAwayTeamName());
 
         assertEquals("Germany", summary.get(4).getHomeTeamName());
-        assertEquals("France", summary.get(4).getGuestTeamName());
+        assertEquals("France", summary.get(4).getAwayTeamName());
     }
 
     @Test

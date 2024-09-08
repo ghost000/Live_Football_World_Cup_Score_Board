@@ -16,7 +16,7 @@ public class Validator {
 
     private static void validateIsThisTeamPlayingRightNow(String teamName, List<Game> games) {
         if (games.stream().anyMatch(game -> game.getHomeTeamName().equalsIgnoreCase(teamName)
-                || game.getGuestTeamName().equalsIgnoreCase(teamName))) {
+                || game.getAwayTeamName().equalsIgnoreCase(teamName))) {
             throw new IllegalArgumentException("Team " + teamName + " is already playing." );
         }
     }
@@ -27,18 +27,18 @@ public class Validator {
         }
     }
 
-    public static void validateTeamNames(String homeTeamName, String guestTeamName, List<Game> games) {
+    public static void validateTeamNames(String homeTeamName, String awayTeamName, List<Game> games) {
         validateTeamName(homeTeamName, "Home" );
-        validateTeamName(guestTeamName, "Guest" );
+        validateTeamName(awayTeamName, "Away" );
 
         final String normalizedHomeTeamName = homeTeamName.trim();
-        final String normalizedGuestTeamName = guestTeamName.trim();
+        final String normalizedAwayTeamName = awayTeamName.trim();
 
         validateIsThisTeamPlayingRightNow(normalizedHomeTeamName, games);
-        validateIsThisTeamPlayingRightNow(normalizedGuestTeamName, games);
+        validateIsThisTeamPlayingRightNow(normalizedAwayTeamName, games);
 
-        if (normalizedHomeTeamName.equalsIgnoreCase(normalizedGuestTeamName)) {
-            throw new IllegalArgumentException("Home team and guest team names must be different." );
+        if (normalizedHomeTeamName.equalsIgnoreCase(normalizedAwayTeamName)) {
+            throw new IllegalArgumentException("Home team and away team names must be different." );
         }
     }
 

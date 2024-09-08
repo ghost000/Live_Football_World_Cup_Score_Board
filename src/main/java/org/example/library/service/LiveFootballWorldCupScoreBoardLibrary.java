@@ -13,22 +13,22 @@ public class LiveFootballWorldCupScoreBoardLibrary {
 
     private final List<Game> games = new ArrayList<>();
 
-    public int addNewGame(String homeTeamName, String guestTeamName) {
-        Validator.validateTeamNames(homeTeamName, guestTeamName, games);
-        games.add(new Game(homeTeamName, guestTeamName));
+    public int addNewGame(String homeTeamName, String awayTeamName) {
+        Validator.validateTeamNames(homeTeamName, awayTeamName, games);
+        games.add(new Game(homeTeamName, awayTeamName));
         return games.getLast().getID();
     }
 
-    public void updateScore(int id, int homeTeamGoals, int guestTeamGoals) {
+    public void updateScore(int id, int homeTeamGoals, int awayTeamGoals) {
         Validator.validateScore(homeTeamGoals, "Home");
-        Validator.validateScore(guestTeamGoals, "Guest");
+        Validator.validateScore(awayTeamGoals, "Away");
 
         Optional<Game> optionalGame = getGame(id);
         Game game = optionalGame.orElseThrow(() ->
                 new IllegalArgumentException("Game with ID: " + id + " was not found.")
         );
 
-        game.getScore().updateScore(homeTeamGoals, guestTeamGoals);
+        game.getScore().updateScore(homeTeamGoals, awayTeamGoals);
     }
 
     public void finishGame(int id) {
@@ -50,6 +50,6 @@ public class LiveFootballWorldCupScoreBoardLibrary {
 
     private boolean isThisTeamPlayingRightNow(String teamName) {
         return games.stream().anyMatch(game -> game.getHomeTeamName().equalsIgnoreCase(teamName)
-                && game.getGuestTeamName().equalsIgnoreCase(teamName));
+                && game.getAwayTeamName().equalsIgnoreCase(teamName));
     }
 }

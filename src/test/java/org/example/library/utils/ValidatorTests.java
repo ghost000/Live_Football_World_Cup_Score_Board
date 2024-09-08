@@ -18,7 +18,7 @@ public class ValidatorTests {
 
     @Test
     void validateScoreShouldPassWhenScoreIsZero() {
-        assertDoesNotThrow(() -> Validator.validateScore(0, "Guest"));
+        assertDoesNotThrow(() -> Validator.validateScore(0, "Away"));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ValidatorTests {
         final List<Game> games = new ArrayList<>();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> Validator.validateTeamNames("Spain", "Spain", games));
-        assertEquals("Home team and guest team names must be different.", exception.getMessage());
+        assertEquals("Home team and away team names must be different.", exception.getMessage());
     }
 
     @Test
@@ -43,11 +43,11 @@ public class ValidatorTests {
     }
 
     @Test
-    void validateTeamNamesShouldThrowExceptionWhenGuestTeamNameIsEmpty() {
+    void validateTeamNamesShouldThrowExceptionWhenAwayTeamNameIsEmpty() {
         final List<Game> games = new ArrayList<>();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> Validator.validateTeamNames("Argentina", "", games));
-        assertEquals("Guest team name cannot be empty.", exception.getMessage());
+        assertEquals("Away team name cannot be empty.", exception.getMessage());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class ValidatorTests {
         final List<Game> games = new ArrayList<>();
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> Validator.validateTeamNames("England", "England ", games));
-        assertEquals("Home team and guest team names must be different.", exception.getMessage());
+        assertEquals("Home team and away team names must be different.", exception.getMessage());
     }
 
     @Test

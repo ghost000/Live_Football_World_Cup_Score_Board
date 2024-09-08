@@ -11,7 +11,7 @@ class GameTests {
 
     @BeforeEach
     void setUp() {
-        game = new Game("Home Team", "Guest Team");
+        game = new Game("Home Team", "Away Team");
     }
 
     @Test
@@ -19,8 +19,8 @@ class GameTests {
         assertNotNull(game.getHomeTeamName());
         assertEquals("Home Team", game.getHomeTeamName());
 
-        assertNotNull(game.getGuestTeamName());
-        assertEquals("Guest Team", game.getGuestTeamName());
+        assertNotNull(game.getAwayTeamName());
+        assertEquals("Away Team", game.getAwayTeamName());
 
         assertNotNull(game.getScore());
         assertEquals(0, game.getScore().getHomeTeamGoals());
@@ -38,7 +38,7 @@ class GameTests {
     @Test
     void testToString() {
         game.getScore().updateScore(2, 1);
-        String expectedString = " homeTeamName : Home Team getHomeTeamGoals : 2 -  guestTeamName : Guest Team getGuestTeamGoals : 1";
+        String expectedString = " homeTeamName : Home Team getHomeTeamGoals : 2 -  awayTeamName : Away Team getAwayTeamGoals : 1";
         assertEquals(expectedString, game.toString());
     }
 }

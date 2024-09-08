@@ -36,6 +36,6 @@ public class Game {
     public String toString() {
         return " homeTeamName : " + homeTeamName
                 + " getHomeTeamGoals : " + score.getHomeTeamGoals() + " - "
-                + " guestTeamName : " + guestTeamName + " getGuestTeamGoals : " + score.getGuestTeamGoals();
+                + " guestTeamName : " + guestTeamName + " getGuestTeamGoals : " + score.getAwayTeamGoals();
     }
 }

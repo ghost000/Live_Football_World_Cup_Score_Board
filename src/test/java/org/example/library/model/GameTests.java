@@ -24,15 +24,15 @@ class GameTests {
 
         assertNotNull(game.getScore());
         assertEquals(0, game.getScore().getHomeTeamGoals());
-        assertEquals(0, game.getScore().getGuestTeamGoals());
+        assertEquals(0, game.getScore().getAwayTeamGoals());
     }
 
     @Test
     void testUpdateScore() {
         game.getScore().updateScore(2, 3);
         assertEquals(2, game.getScore().getHomeTeamGoals());
-        assertEquals(3, game.getScore().getGuestTeamGoals());
-        assertEquals(5, game.getScore().getHomeTeamGoals() + game.getScore().getGuestTeamGoals());
+        assertEquals(3, game.getScore().getAwayTeamGoals());
+        assertEquals(5, game.getScore().getHomeTeamGoals() + game.getScore().getAwayTeamGoals());
     }
 
     @Test

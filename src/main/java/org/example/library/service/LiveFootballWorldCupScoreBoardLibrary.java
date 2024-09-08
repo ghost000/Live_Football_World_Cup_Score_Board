@@ -41,7 +41,7 @@ public class LiveFootballWorldCupScoreBoardLibrary {
     }
 
     public List<Game> getASummary() {
-        return games.stream().sorted(Comparator.comparingInt((Game game) -> game.getScore().getHomeTeamGoals() + game.getScore().getGuestTeamGoals()).reversed().thenComparing(Game::getID, Comparator.reverseOrder())).collect(Collectors.toList());
+        return games.stream().sorted(Comparator.comparingInt((Game game) -> game.getScore().getHomeTeamGoals() + game.getScore().getAwayTeamGoals()).reversed().thenComparing(Game::getID, Comparator.reverseOrder())).collect(Collectors.toList());
     }
 
     private Optional<Game> getGame(int id) {

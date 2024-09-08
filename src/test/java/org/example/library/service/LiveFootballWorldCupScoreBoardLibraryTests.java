@@ -14,14 +14,14 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
     }
 
     @Test
-    void shouldCreateLibrary() {
+    void shouldCreateScoreBoard() {
         final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
         scoreBoardLibrary.updateScore(id, 0, 1);
 
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
         assertEquals(0, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
     }
 
     @Test
@@ -32,7 +32,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
         assertEquals(2, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
         assertEquals(2, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
     }
 
     @Test
@@ -183,7 +183,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
         assertEquals(0, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getGuestTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
     }
 
     @Test

@@ -4,7 +4,7 @@ public class Score {
     private int homeTeamGoals = 0;
     private int guestTeamGoals = 0;
 
-    public int getGuestTeamGoals() {
+    public int getAwayTeamGoals() {
         return guestTeamGoals;
     }
 

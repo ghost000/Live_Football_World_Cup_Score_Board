@@ -2,7 +2,6 @@ package org.example.library.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +11,7 @@ class GameTests {
 
     @BeforeEach
     void setUp() {
-        game = new Game("Home Team", "Guest Team", System.nanoTime(), UUID.randomUUID().toString());
+        game = new Game("Home Team", "Guest Team");
     }
 
     @Test
@@ -26,8 +25,6 @@ class GameTests {
         assertNotNull(game.getScore());
         assertEquals(0, game.getScore().getHomeTeamGoals());
         assertEquals(0, game.getScore().getGuestTeamGoals());
-
-        assertNotNull(game.getStartTime());
     }
 
     @Test

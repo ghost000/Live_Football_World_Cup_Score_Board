@@ -1,21 +1,19 @@
 package org.example.library.model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Game {
+    private final static AtomicInteger idCounter = new AtomicInteger(1);
+
     private final String homeTeamName;
     private final String guestTeamName;
     private final Score score = new Score();
-    private final long startTime;
-    private final String id;
+    private final int id;
 
-    public Game(String homeTeamName, String guestTeamName, Long startTime, String id) {
+    public Game(String homeTeamName, String guestTeamName) {
         this.homeTeamName = homeTeamName;
         this.guestTeamName = guestTeamName;
-        this.startTime = startTime;
-        this.id = id;
-    }
-
-    public long getStartTime() {
-        return startTime;
+        this.id = idCounter.getAndIncrement();
     }
 
     public String getHomeTeamName() {
@@ -30,7 +28,7 @@ public class Game {
         return score;
     }
 
-    public String getID() {
+    public int getID() {
         return id;
     }
 

@@ -84,7 +84,7 @@ The MIT License (MIT)
 - [ ] Think about performance / scalability / persistence (DB)
 
 ## Tasks / comments from review
-- [ ] Redundant Score constructor.
+- [x] Redundant Score constructor.
 - [ ] Code is quite procedural, could be more maintainable and expressive using OO.
 - [ ] Lacks use of design patterns.
 - [ ] Score class is mutable whereas Game is immutable. Seems inconsistent. 

@@ -3,7 +3,6 @@ package org.example.library.model;
 public class Score {
     private int homeTeamGoals = 0;
     private int guestTeamGoals = 0;
-    public Score() {}
 
     public int getGuestTeamGoals() {
         return guestTeamGoals;

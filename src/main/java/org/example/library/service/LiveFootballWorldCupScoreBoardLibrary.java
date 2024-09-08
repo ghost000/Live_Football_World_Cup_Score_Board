@@ -14,7 +14,7 @@ public class LiveFootballWorldCupScoreBoardLibrary {
     private final List<Game> games = new ArrayList<>();
 
     public int addNewGame(String homeTeamName, String guestTeamName) {
-        Validator.validateTeamNames(homeTeamName, guestTeamName);
+        Validator.validateTeamNames(homeTeamName, guestTeamName, games);
         games.add(new Game(homeTeamName, guestTeamName));
         return games.getLast().getID();
     }
@@ -46,5 +46,10 @@ public class LiveFootballWorldCupScoreBoardLibrary {
 
     private Optional<Game> getGame(int id) {
         return games.stream().filter(game -> game.getID() == id).findFirst();
+    }
+
+    private boolean isThisTeamPlayingRightNow(String teamName) {
+        return games.stream().anyMatch(game -> game.getHomeTeamName().equalsIgnoreCase(teamName)
+                && game.getGuestTeamName().equalsIgnoreCase(teamName));
     }
 }

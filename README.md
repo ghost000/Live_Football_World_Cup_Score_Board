@@ -95,7 +95,7 @@ The MIT License (MIT)
 - [X] Validator.validateTeamName() is public even though it's not used externally.
 - [X] Validator.validateNotNull() is only ever used in tests.
 - [X] Validator.validateTeamNames() fails when comparing "England" against "England ".
-- [ ] Lacks validation. It's possible to start a game with team names containing whitespace, and even start a match with a team which is already playing.
+- [X] Lacks validation. It's possible to start a game with team names containing whitespace, and even start a match with a team which is already playing.
 - [X] Unusual naming e.g. getGuestTeamGoals() instead of Away, shouldCreateLibrary() test method which creates a scoreboard and not a library.
 - [ ] Too many asserts in some test scenarios.
 - [ ] Unit test methods are far too big and unmaintainable, too many asserts in each test method.

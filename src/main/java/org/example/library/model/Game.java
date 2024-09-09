@@ -47,7 +47,7 @@ public final class Game {
     @Override
     public String toString() {
         return " homeTeamName : " + homeTeamName
-                + " getHomeTeamGoals : " + score.getHomeTeamGoals() + " - "
-                + " awayTeamName : " + awayTeamName + " getAwayTeamGoals : " + score.getAwayTeamGoals();
+                + " getHomeTeamGoals : " + score.homeTeamGoals() + " - "
+                + " awayTeamName : " + awayTeamName + " getAwayTeamGoals : " + score.awayTeamGoals();
     }
 }

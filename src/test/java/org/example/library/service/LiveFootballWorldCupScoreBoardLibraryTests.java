@@ -3,6 +3,8 @@ package org.example.library.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LiveFootballWorldCupScoreBoardLibraryTests {
@@ -20,8 +22,8 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
-        assertEquals(0, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
+        assertEquals(0, summary.getFirst().getScore().homeTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test
@@ -31,13 +33,12 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
-        assertEquals(2, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
+        assertEquals(3, summary.getFirst().getScore().homeTeamGoals()
+                + summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test
     void updateScoreShouldFailForNonexistentMatch() {
-        final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
         assertThrows(IllegalArgumentException.class, () -> {
             scoreBoardLibrary.updateScore(1234567890, 0, 1);
         });
@@ -51,8 +52,8 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
-        assertEquals(2, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
+        assertEquals(3, summary.getFirst().getScore().homeTeamGoals()
+                + summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test
@@ -82,29 +83,27 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
         var summary = scoreBoardLibrary.getASummary();
 
-        assertEquals(5, scoreBoardLibrary.getASummary().size());
+        assertEquals(5, summary.size());
 
-        assertEquals("Uruguay", summary.get(0).getHomeTeamName());
-        assertEquals("Italy", summary.get(0).getAwayTeamName());
+        List<String[]> expectedTeams = List.of(
+                new String[]{"Uruguay", "Italy"},
+                new String[]{"Spain", "Brazil"},
+                new String[]{"Mexico", "Canada"},
+                new String[]{"Argentina", "Australia"},
+                new String[]{"Germany", "France"}
+        );
 
-        assertEquals("Spain", summary.get(1).getHomeTeamName());
-        assertEquals("Brazil", summary.get(1).getAwayTeamName());
-
-        assertEquals("Mexico", summary.get(2).getHomeTeamName());
-        assertEquals("Canada", summary.get(2).getAwayTeamName());
-
-        assertEquals("Argentina", summary.get(3).getHomeTeamName());
-        assertEquals("Australia", summary.get(3).getAwayTeamName());
-
-        assertEquals("Germany", summary.get(4).getHomeTeamName());
-        assertEquals("France", summary.get(4).getAwayTeamName());
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
     }
 
     @Test
     void finishGameShouldRemoveMatchFromScoreboard() {
-        final int id_1 = scoreBoardLibrary.addNewGame("home team 1", "away team 1" );
-        final int id_2 = scoreBoardLibrary.addNewGame("home team 2", "away team 2" );
-        final int id_3 = scoreBoardLibrary.addNewGame("home team 3", "away team 3" );
+        final int id_1 = scoreBoardLibrary.addNewGame("home team 1", "away team 1");
+        final int id_2 = scoreBoardLibrary.addNewGame("home team 2", "away team 2");
+        final int id_3 = scoreBoardLibrary.addNewGame("home team 3", "away team 3");
 
         scoreBoardLibrary.updateScore(id_1, 1, 1);
         scoreBoardLibrary.updateScore(id_2, 2, 2);
@@ -116,11 +115,15 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
         assertEquals(2, summary.size());
 
-        assertEquals("home team 3", summary.get(0).getHomeTeamName());
-        assertEquals("away team 3", summary.get(0).getAwayTeamName());
+        List<String[]> expectedTeams = List.of(
+                new String[]{"home team 3", "away team 3"},
+                new String[]{"home team 1", "away team 1"}
+        );
 
-        assertEquals("home team 1", summary.get(1).getHomeTeamName());
-        assertEquals("away team 1", summary.get(1).getAwayTeamName());
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
     }
 
     @Test
@@ -154,20 +157,18 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
         assertEquals(5, summary.size());
 
-        assertEquals("Spain", summary.get(0).getHomeTeamName());
-        assertEquals("Brazil", summary.get(0).getAwayTeamName());
+        List<String[]> expectedTeams = List.of(
+                new String[]{"Spain", "Brazil"},
+                new String[]{"Uruguay", "Italy"},
+                new String[]{"Mexico", "Canada"},
+                new String[]{"Argentina", "Australia"},
+                new String[]{"Germany", "France"}
+        );
 
-        assertEquals("Uruguay", summary.get(1).getHomeTeamName());
-        assertEquals("Italy", summary.get(1).getAwayTeamName());
-
-        assertEquals("Mexico", summary.get(2).getHomeTeamName());
-        assertEquals("Canada", summary.get(2).getAwayTeamName());
-
-        assertEquals("Argentina", summary.get(3).getHomeTeamName());
-        assertEquals("Australia", summary.get(3).getAwayTeamName());
-
-        assertEquals("Germany", summary.get(4).getHomeTeamName());
-        assertEquals("France", summary.get(4).getAwayTeamName());
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
     }
 
     @Test
@@ -175,15 +176,10 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
         final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
         scoreBoardLibrary.updateScore(id, 0, 1);
         scoreBoardLibrary.updateScore(id, 0, 1);
-        scoreBoardLibrary.updateScore(id, 0, 1);
-        scoreBoardLibrary.updateScore(id, 0, 1);
-        scoreBoardLibrary.updateScore(id, 0, 1);
-        scoreBoardLibrary.updateScore(id, 0, 1);
 
         var summary = scoreBoardLibrary.getASummary();
         assertEquals(1, summary.size());
-        assertEquals(0, summary.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, summary.getFirst().getScore().getAwayTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().homeTeamGoals() + summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test

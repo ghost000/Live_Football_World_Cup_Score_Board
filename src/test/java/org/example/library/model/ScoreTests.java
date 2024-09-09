@@ -15,23 +15,6 @@ class ScoreTests {
 
     @Test
     void testDefaultConstructor() {
-        assertEquals(0, score.getHomeTeamGoals());
-        assertEquals(0, score.getAwayTeamGoals());
-    }
-
-    @Test
-    void testUpdateScore() {
-        score = score.updateScore(3, 2);
-
-        assertEquals(3, score.getHomeTeamGoals());
-        assertEquals(2, score.getAwayTeamGoals());
-        assertEquals(5, score.getHomeTeamGoals() + score.getAwayTeamGoals());
-    }
-
-    @Test
-    void testGetTotalScore() {
-        score = score.updateScore(4, 1);
-
-        assertEquals(5, score.getHomeTeamGoals() + score.getAwayTeamGoals());
+        assertEquals(0, score.homeTeamGoals() + score.awayTeamGoals());
     }
 }

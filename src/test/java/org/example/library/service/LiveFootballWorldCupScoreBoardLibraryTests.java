@@ -1,5 +1,6 @@
 package org.example.library.service;
 
+import org.example.library.model.GameSummary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @BeforeEach
     void setUp() {
-        scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
+        scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary(new LiveGameManager());
     }
 
     @Test

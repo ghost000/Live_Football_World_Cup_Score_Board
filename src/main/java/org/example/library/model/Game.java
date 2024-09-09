@@ -1,5 +1,7 @@
 package org.example.library.model;
 
+import org.example.library.utils.Validator;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Game {
@@ -41,6 +43,8 @@ public final class Game {
     }
 
     public Game updateScore(int homeTeamGoals, int awayTeamGoals) {
+        Validator.validateScore(homeTeamGoals, "Home");
+        Validator.validateScore(awayTeamGoals, "Away");
         return new Game(this.homeTeamName, this.awayTeamName, new Score(homeTeamGoals, awayTeamGoals), this.id);
     }
 

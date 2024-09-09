@@ -5,7 +5,7 @@ import org.example.library.model.Game;
 import java.util.List;
 import java.util.Objects;
 
-public class Validator {
+public final class Validator {
 
     private static void validateTeamName(String teamName, String teamType) {
         Objects.requireNonNull(teamName, teamType + " team name cannot be null." );

@@ -85,7 +85,7 @@ The MIT License (MIT)
 
 ## Tasks / comments from review
 - [x] Redundant Score constructor.
-- [ ] Code is quite procedural, could be more maintainable and expressive using OO.
+- [X] Code is quite procedural, could be more maintainable and expressive using OO.
 - [ ] Lacks use of design patterns.
 - [x] Score class is mutable whereas Game is immutable. Seems inconsistent. 
 - [x] getTotalScore() doesn't really belong on Score as is only ever used by the sorting logic and can be calculated there.

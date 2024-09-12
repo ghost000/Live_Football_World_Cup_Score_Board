@@ -1,37 +1,57 @@
 package org.example.library.model;
 
-public class Game {
-    private final String homeTeamName;
-    private final String guestTeamName;
-    private final Score score = new Score();
-    private final long startTime;
+import org.example.library.utils.Validator;
 
-    public Game(String homeTeamName, String guestTeamName, Long startTime) {
+import java.util.concurrent.atomic.AtomicInteger;
+
+public final class Game {
+    private final static AtomicInteger idCounter = new AtomicInteger(1);
+
+    private final String homeTeamName;
+    private final String awayTeamName;
+    private final Score score;
+    private final int id;
+
+    public Game(String homeTeamName, String awayTeamName) {
         this.homeTeamName = homeTeamName;
-        this.guestTeamName = guestTeamName;
-        this.startTime = startTime;
+        this.awayTeamName = awayTeamName;
+        this.score = new Score(0,0);
+        this.id = idCounter.getAndIncrement();
     }
 
-    public long getStartTime() {
-        return startTime;
+    public Game(String homeTeamName, String awayTeamName, Score score, int id) {
+        this.homeTeamName = homeTeamName;
+        this.awayTeamName = awayTeamName;
+        this.score = score;
+        this.id = id;
     }
 
     public String getHomeTeamName() {
         return homeTeamName;
     }
 
-    public String getGuestTeamName() {
-        return guestTeamName;
+    public String getAwayTeamName() {
+        return awayTeamName;
     }
 
     public Score getScore() {
         return score;
     }
 
+    public int getID() {
+        return id;
+    }
+
+    public Game updateScore(int homeTeamGoals, int awayTeamGoals) {
+        Validator.validateScore(homeTeamGoals, "Home");
+        Validator.validateScore(awayTeamGoals, "Away");
+        return new Game(this.homeTeamName, this.awayTeamName, new Score(homeTeamGoals, awayTeamGoals), this.id);
+    }
+
     @Override
     public String toString() {
         return " homeTeamName : " + homeTeamName
-                + " getHomeTeamGoals : " + score.getHomeTeamGoals() + " - "
-                + " guestTeamName : " + guestTeamName + " getGuestTeamGoals : " + score.getGuestTeamGoals();
+                + " getHomeTeamGoals : " + score.homeTeamGoals() + " - "
+                + " awayTeamName : " + awayTeamName + " getAwayTeamGoals : " + score.awayTeamGoals();
     }
 }

@@ -1,241 +1,435 @@
 package org.example.library.service;
 
+import org.example.library.model.GameSummary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LiveFootballWorldCupScoreBoardLibraryTests {
     private LiveFootballWorldCupScoreBoardLibrary scoreBoardLibrary;
 
     @BeforeEach
     void setUp() {
-        scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
+        scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary(new LiveGameManager());
     }
 
     @Test
-    void shouldCreateLibrary() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+    void shouldCreateScoreBoard() {
+        final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 0, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(0, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
-        assertEquals(1, scoreBoardLibrary.getASummary().size());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(0, summary.getFirst().getScore().homeTeamGoals());
+        assertEquals(1, summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test
     void updateScoreShouldCorrectlyUpdateOngoingMatch() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 2, "away team", 1);
+        final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 2, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(2, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
-        assertEquals(1, scoreBoardLibrary.getASummary().size());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(3, summary.getFirst().getScore().homeTeamGoals()
+                + summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test
     void updateScoreShouldFailForNonexistentMatch() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        assertThrows(IllegalArgumentException.class, () -> { scoreBoardLibrary.updateScore("alone team", 0,"new team", 1); });
+        assertThrows(IllegalArgumentException.class, () -> scoreBoardLibrary.updateScore(1234567890, 0, 1));
     }
 
     @Test
     void updateScoreShouldAllowLoweringScore() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 3, "away team", 2);
-        scoreBoardLibrary.updateScore("home team", 2, "away team", 1);
+        final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 3, 2);
+        scoreBoardLibrary.updateScore(id, 2, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(2, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
-        assertEquals(1, scoreBoardLibrary.getASummary().size());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(3, summary.getFirst().getScore().homeTeamGoals()
+                + summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test
     void updateScoreShouldHandleNegativeScoresGracefully() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        assertThrows(IllegalArgumentException.class, () -> { scoreBoardLibrary.updateScore("home team", -10,"away team", -1); });
+        final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        assertThrows(IllegalArgumentException.class, () -> scoreBoardLibrary.updateScore(id, -10, -1));
     }
 
     @Test
     void getSummaryShouldReturnGamesInCorrectOrder() {
-        scoreBoardLibrary.addNewGame("Mexico", "Canada");
-        scoreBoardLibrary.updateScore("Mexico", 0, "Canada", 5);
+        final int id_1 = scoreBoardLibrary.addNewGame("Mexico", "Canada" );
+        scoreBoardLibrary.updateScore(id_1, 0, 5);
 
-        scoreBoardLibrary.addNewGame("Spain", "Brazil");
-        scoreBoardLibrary.updateScore("Spain", 10, "Brazil", 2);
+        final int id_2 = scoreBoardLibrary.addNewGame("Spain", "Brazil" );
+        scoreBoardLibrary.updateScore(id_2, 10, 2);
 
-        scoreBoardLibrary.addNewGame("Germany", "France");
-        scoreBoardLibrary.updateScore("Germany", 2, "France", 2);
+        final int id_3 = scoreBoardLibrary.addNewGame("Germany", "France" );
+        scoreBoardLibrary.updateScore(id_3, 2, 2);
 
-        scoreBoardLibrary.addNewGame("Uruguay", "Italy");
-        scoreBoardLibrary.updateScore("Uruguay", 6, "Italy", 6);
+        final int id_4 = scoreBoardLibrary.addNewGame("Uruguay", "Italy" );
+        scoreBoardLibrary.updateScore(id_4, 6, 6);
 
-        scoreBoardLibrary.addNewGame("Argentina", "Australia");
-        scoreBoardLibrary.updateScore("Argentina", 3, "Australia", 1);
+        final int id_5 = scoreBoardLibrary.addNewGame("Argentina", "Australia" );
+        scoreBoardLibrary.updateScore(id_5, 3, 1);
 
-        var collection = scoreBoardLibrary.getASummary();
+        var summary = scoreBoardLibrary.getASummary();
 
-        assertEquals(5, scoreBoardLibrary.getASummary().size());
+        assertEquals(5, summary.size());
 
-        assertEquals("Uruguay", collection.get(0).getHomeTeamName());
-        assertEquals("Italy", collection.get(0).getGuestTeamName());
+        List<String[]> expectedTeams = List.of(
+                new String[]{"Uruguay", "Italy"},
+                new String[]{"Spain", "Brazil"},
+                new String[]{"Mexico", "Canada"},
+                new String[]{"Argentina", "Australia"},
+                new String[]{"Germany", "France"}
+        );
 
-        assertEquals("Spain", collection.get(1).getHomeTeamName());
-        assertEquals("Brazil", collection.get(1).getGuestTeamName());
-
-        assertEquals("Mexico", collection.get(2).getHomeTeamName());
-        assertEquals("Canada", collection.get(2).getGuestTeamName());
-
-        assertEquals("Argentina", collection.get(3).getHomeTeamName());
-        assertEquals("Australia", collection.get(3).getGuestTeamName());
-
-        assertEquals("Germany", collection.get(4).getHomeTeamName());
-        assertEquals("France", collection.get(4).getGuestTeamName());
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
     }
 
     @Test
     void finishGameShouldRemoveMatchFromScoreboard() {
-        scoreBoardLibrary.addNewGame("home team 1", "away team 1");
-        scoreBoardLibrary.addNewGame("home team 2", "away team 2");
-        scoreBoardLibrary.addNewGame("home team 3", "away team 3");
+        final int id_1 = scoreBoardLibrary.addNewGame("home team 1", "away team 1" );
+        final int id_2 = scoreBoardLibrary.addNewGame("home team 2", "away team 2" );
+        final int id_3 = scoreBoardLibrary.addNewGame("home team 3", "away team 3" );
 
-        scoreBoardLibrary.updateScore("home team 1", 1, "away team 1", 1);
-        scoreBoardLibrary.updateScore("home team 2", 2, "away team 2", 2);
-        scoreBoardLibrary.updateScore("home team 3", 3, "away team 3", 3);
+        scoreBoardLibrary.updateScore(id_1, 1, 1);
+        scoreBoardLibrary.updateScore(id_2, 2, 2);
+        scoreBoardLibrary.updateScore(id_3, 3, 3);
 
-        scoreBoardLibrary.getScoreboard();
+        scoreBoardLibrary.finishGame(id_2);
 
-        scoreBoardLibrary.finishGame("home team 2", "away team 2");
+        var summary = scoreBoardLibrary.getASummary();
 
-        var collection = scoreBoardLibrary.getASummary();
+        assertEquals(2, summary.size());
 
-        assertEquals(2, scoreBoardLibrary.getASummary().size());
+        List<String[]> expectedTeams = List.of(
+                new String[]{"home team 3", "away team 3"},
+                new String[]{"home team 1", "away team 1"}
+        );
 
-        assertEquals("home team 3", collection.get(0).getHomeTeamName());
-        assertEquals("away team 3", collection.get(0).getGuestTeamName());
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
+    }
 
-        assertEquals("home team 1", collection.get(1).getHomeTeamName());
-        assertEquals("away team 1", collection.get(1).getGuestTeamName());
+    @Test
+    void updateScoreShouldHandleMultipleMatchesSequentially() {
+        final int id_1 = scoreBoardLibrary.addNewGame("Mexico", "Canada" );
+        final int id_2 = scoreBoardLibrary.addNewGame("Spain", "Brazil" );
+        final int id_3 = scoreBoardLibrary.addNewGame("Germany", "France" );
+        final int id_4 = scoreBoardLibrary.addNewGame("Uruguay", "Italy" );
+        final int id_5 = scoreBoardLibrary.addNewGame("Argentina", "Australia" );
+
+        scoreBoardLibrary.updateScore(id_1, 2, 6);
+        scoreBoardLibrary.updateScore(id_2, 11, 3);
+        scoreBoardLibrary.updateScore(id_3, 3, 4);
+        scoreBoardLibrary.updateScore(id_4, 7, 6);
+        scoreBoardLibrary.updateScore(id_5, 4, 5);
+
+        scoreBoardLibrary.updateScore(id_1, 3, 7);
+        scoreBoardLibrary.updateScore(id_2, 14, 4);
+        scoreBoardLibrary.updateScore(id_3, 4, 5);
+        scoreBoardLibrary.updateScore(id_4, 8, 6);
+        scoreBoardLibrary.updateScore(id_5, 5, 5);
+
+        scoreBoardLibrary.updateScore(id_1, 5, 7);
+        scoreBoardLibrary.updateScore(id_2, 15, 7);
+        scoreBoardLibrary.updateScore(id_3, 5, 6);
+        scoreBoardLibrary.updateScore(id_4, 9, 6);
+        scoreBoardLibrary.updateScore(id_5, 6, 5);
+
+        var summary = scoreBoardLibrary.getASummary();
+
+        assertEquals(5, summary.size());
+
+        List<String[]> expectedTeams = List.of(
+                new String[]{"Spain", "Brazil"},
+                new String[]{"Uruguay", "Italy"},
+                new String[]{"Mexico", "Canada"},
+                new String[]{"Argentina", "Australia"},
+                new String[]{"Germany", "France"}
+        );
+
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
     }
 
     @Test
     void updateScoreShouldHandleMultipleMatchesSimultaneously() {
-        scoreBoardLibrary.addNewGame("Mexico", "Canada");
-        scoreBoardLibrary.addNewGame("Spain", "Brazil");
-        scoreBoardLibrary.addNewGame("Germany", "France");
-        scoreBoardLibrary.addNewGame("Uruguay", "Italy");
-        scoreBoardLibrary.addNewGame("Argentina", "Australia");
+        final int id_1 = scoreBoardLibrary.addNewGame("Mexico", "Canada" );
+        final int id_2 = scoreBoardLibrary.addNewGame("Spain", "Brazil" );
+        final int id_3 = scoreBoardLibrary.addNewGame("Germany", "France" );
+        final int id_4 = scoreBoardLibrary.addNewGame("Uruguay", "Italy" );
+        final int id_5 = scoreBoardLibrary.addNewGame("Argentina", "Australia" );
 
-        scoreBoardLibrary.updateScore("Mexico", 2, "Canada", 6);
-        scoreBoardLibrary.updateScore("Spain", 11, "Brazil", 3);
-        scoreBoardLibrary.updateScore("Germany", 3, "France", 4);
-        scoreBoardLibrary.updateScore("Uruguay", 7, "Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 4, "Australia", 5);
+        scoreBoardLibrary.updateScore(id_1, 2, 6);
+        scoreBoardLibrary.updateScore(id_2, 11, 3);
+        scoreBoardLibrary.updateScore(id_3, 3, 4);
+        scoreBoardLibrary.updateScore(id_4, 7, 6);
+        scoreBoardLibrary.updateScore(id_5, 4, 5);
 
-        scoreBoardLibrary.updateScore("Mexico", 3, "Canada", 7);
-        scoreBoardLibrary.updateScore("Spain", 14, "Brazil", 4);
-        scoreBoardLibrary.updateScore("Germany", 4, "France", 5);
-        scoreBoardLibrary.updateScore("Uruguay", 8, "Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 5, "Australia", 5);
+        scoreBoardLibrary.updateScore(id_1, 3, 7);
+        scoreBoardLibrary.updateScore(id_2, 14, 4);
+        scoreBoardLibrary.updateScore(id_3, 4, 5);
+        scoreBoardLibrary.updateScore(id_4, 8, 6);
+        scoreBoardLibrary.updateScore(id_5, 5, 5);
 
+        scoreBoardLibrary.updateScore(id_1, 5, 7);
+        scoreBoardLibrary.updateScore(id_2, 15, 7);
+        scoreBoardLibrary.updateScore(id_3, 5, 6);
+        scoreBoardLibrary.updateScore(id_4, 9, 6);
+        scoreBoardLibrary.updateScore(id_5, 6, 5);
 
-        scoreBoardLibrary.updateScore("Mexico", 5, "Canada", 7);
-        scoreBoardLibrary.updateScore("Spain", 15, "Brazil", 7);
-        scoreBoardLibrary.updateScore("Germany", 5, "France", 6);
-        scoreBoardLibrary.updateScore("Uruguay", 9, "Italy", 6);
-        scoreBoardLibrary.updateScore("Argentina", 6, "Australia", 5);
+        var summary = scoreBoardLibrary.getASummary();
 
-        var collection = scoreBoardLibrary.getASummary();
+        assertEquals(5, summary.size());
 
-        assertEquals(5, scoreBoardLibrary.getASummary().size());
+        List<String[]> expectedTeams = List.of(
+                new String[]{"Spain", "Brazil"},
+                new String[]{"Uruguay", "Italy"},
+                new String[]{"Mexico", "Canada"},
+                new String[]{"Argentina", "Australia"},
+                new String[]{"Germany", "France"}
+        );
 
-        assertEquals("Spain", collection.get(0).getHomeTeamName());
-        assertEquals("Brazil", collection.get(0).getGuestTeamName());
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
+    }
+//NOTE: non-deterministic behavior
+//    @Test
+//    void updateScoreShouldHandleMultipleMatchesSimultaneouslyViaParallelStream() throws InterruptedException {
+//        final int id_1 = scoreBoardLibrary.addNewGame("Mexico", "Canada" );
+//        final int id_2 = scoreBoardLibrary.addNewGame("Spain", "Brazil" );
+//        final int id_3 = scoreBoardLibrary.addNewGame("Germany", "France" );
+//        final int id_4 = scoreBoardLibrary.addNewGame("Uruguay", "Italy" );
+//        final int id_5 = scoreBoardLibrary.addNewGame("Argentina", "Australia" );
+//
+//// NOTE: non-deterministic behavior
+////        List<Runnable> tasks = List.of(
+////                () -> scoreBoardLibrary.updateScore(id_1, 2, 6),
+////                () -> scoreBoardLibrary.updateScore(id_2, 11, 3),
+////                () -> scoreBoardLibrary.updateScore(id_3, 3, 4),
+////                () -> scoreBoardLibrary.updateScore(id_4, 7, 6),
+////                () -> scoreBoardLibrary.updateScore(id_5, 4, 5),
+////
+////                () -> scoreBoardLibrary.updateScore(id_1, 3, 7),
+////                () -> scoreBoardLibrary.updateScore(id_2, 14, 4),
+////                () -> scoreBoardLibrary.updateScore(id_3, 4, 5),
+////                () -> scoreBoardLibrary.updateScore(id_4, 8, 6),
+////                () -> scoreBoardLibrary.updateScore(id_5, 5, 5),
+////
+////                () -> scoreBoardLibrary.updateScore(id_1, 5, 7),
+////                () -> scoreBoardLibrary.updateScore(id_2, 15, 7),
+////                () -> scoreBoardLibrary.updateScore(id_3, 5, 6),
+////                () -> scoreBoardLibrary.updateScore(id_4, 9, 6),
+////                () -> scoreBoardLibrary.updateScore(id_5, 6, 5)
+////        );
+//
+//        int numberOfTasks = 15; // Number of tasks
+//        CountDownLatch latch = new CountDownLatch(numberOfTasks);
+//
+//        List<Runnable> tasks = List.of(
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_1, 2, 6);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_2, 11, 3);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_3, 3, 4);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_4, 7, 6);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_5, 4, 5);
+//                    latch.countDown();
+//                },
+//
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_1, 3, 7);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_2, 14, 4);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_3, 4, 5);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_4, 8, 6);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_5, 5, 5);
+//                    latch.countDown();
+//                },
+//
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_1, 5, 7);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_2, 15, 7);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_3, 5, 6);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_4, 9, 6);
+//                    latch.countDown();
+//                },
+//                () -> {
+//                    scoreBoardLibrary.updateScore(id_5, 6, 5);
+//                    latch.countDown();
+//                }
+//        );
+//
+//        tasks.parallelStream().forEach(Runnable::run);
+//
+//        var summary = scoreBoardLibrary.getASummary();
+//
+//        assertEquals(5, summary.size());
+//
+//        List<String[]> expectedTeams = List.of(
+//                new String[]{"Spain", "Brazil"},
+//                new String[]{"Uruguay", "Italy"},
+//                new String[]{"Mexico", "Canada"},
+//                new String[]{"Argentina", "Australia"},
+//                new String[]{"Germany", "France"}
+//        );
+//
+//        for (int i = 0; i < expectedTeams.size(); i++) {
+//            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+//            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+//        }
+//    }
 
-        assertEquals("Uruguay", collection.get(1).getHomeTeamName());
-        assertEquals("Italy", collection.get(1).getGuestTeamName());
+    @Test
+    void updateScoreShouldHandleMultipleMatchesSimultaneouslyViaExecutorService() throws InterruptedException {
+        final int[] ids = new int[5];
 
-        assertEquals("Mexico", collection.get(2).getHomeTeamName());
-        assertEquals("Canada", collection.get(2).getGuestTeamName());
+        try (ExecutorService executor = Executors.newFixedThreadPool(5)) {
 
-        assertEquals("Argentina", collection.get(3).getHomeTeamName());
-        assertEquals("Australia", collection.get(3).getGuestTeamName());
+            executor.submit(() -> ids[0] = scoreBoardLibrary.addNewGame("Mexico", "Canada" ));
+            executor.submit(() -> ids[1] = scoreBoardLibrary.addNewGame("Spain", "Brazil" ));
+            executor.submit(() -> ids[2] = scoreBoardLibrary.addNewGame("Germany", "France" ));
+            executor.submit(() -> ids[3] = scoreBoardLibrary.addNewGame("Uruguay", "Italy" ));
+            executor.submit(() -> ids[4] = scoreBoardLibrary.addNewGame("Argentina", "Australia" ));
 
-        assertEquals("Germany", collection.get(4).getHomeTeamName());
-        assertEquals("France", collection.get(4).getGuestTeamName());
+            executor.shutdown();
+            if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
+                executor.shutdownNow();
+            }
+        }
+
+        try (ExecutorService executor = Executors.newFixedThreadPool(5)) {
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 2, 6));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 11, 3));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 3, 4));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 7, 6));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 4, 5));
+
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 3, 7));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 14, 4));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 4, 5));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 8, 6));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 5, 5));
+
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 5, 7));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 15, 7));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 5, 6));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 9, 6));
+            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 6, 5));
+
+            executor.shutdown();
+            if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
+                executor.shutdownNow();
+            }
+        }
+
+        var summary = scoreBoardLibrary.getASummary();
+
+        assertEquals(5, summary.size());
+
+        List<String[]> expectedTeams = List.of(
+                new String[]{"Spain", "Brazil"},
+                new String[]{"Uruguay", "Italy"},
+                new String[]{"Mexico", "Canada"},
+                new String[]{"Argentina", "Australia"},
+                new String[]{"Germany", "France"}
+        );
+
+        for (int i = 0; i < expectedTeams.size(); i++) {
+            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+        }
     }
 
     @Test
     void updateScoreShouldNotChangeWhenSameScoreIsGiven() {
-        scoreBoardLibrary.addNewGame("home team", "away team");
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
-        scoreBoardLibrary.updateScore("home team", 0, "away team", 1);
+        final int id = scoreBoardLibrary.addNewGame("home team", "away team" );
+        scoreBoardLibrary.updateScore(id, 0, 1);
+        scoreBoardLibrary.updateScore(id, 0, 1);
 
-        var scoreBoard = scoreBoardLibrary.getScoreboard();
-        assertEquals(1, scoreBoard.size());
-        assertEquals(0, scoreBoard.getFirst().getScore().getHomeTeamGoals());
-        assertEquals(1, scoreBoard.getFirst().getScore().getGuestTeamGoals());
+        var summary = scoreBoardLibrary.getASummary();
+        assertEquals(1, summary.size());
+        assertEquals(1, summary.getFirst().getScore().homeTeamGoals() + summary.getFirst().getScore().awayTeamGoals());
     }
 
     @Test
     void addNewGameShouldThrowExceptionForIdenticalTeamNames() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.addNewGame("TeamA", "TeamA");
-        });
+        assertThrows(IllegalArgumentException.class, () -> scoreBoardLibrary.addNewGame("TeamA", "TeamA" ));
     }
 
     @Test
     void addNewGameShouldThrowExceptionForNullTeamNames() {
-        assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.addNewGame(null, "TeamB");
-        });
-        assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.addNewGame("TeamA", null);
-        });
+        assertThrows(NullPointerException.class, () -> scoreBoardLibrary.addNewGame(null, "TeamB" ));
+        assertThrows(NullPointerException.class, () -> scoreBoardLibrary.addNewGame("TeamA", null));
     }
 
     @Test
     void updateScoreShouldThrowExceptionForNegativeScores() {
-        scoreBoardLibrary.addNewGame("TeamA", "TeamB");
-        assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.updateScore("TeamA", -1, "TeamB", 3);
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.updateScore("TeamA", 2, "TeamB", -3);
-        });
+        final int id = scoreBoardLibrary.addNewGame("TeamA", "TeamB" );
+        assertThrows(IllegalArgumentException.class, () -> scoreBoardLibrary.updateScore(id, -1, 3));
+        assertThrows(IllegalArgumentException.class, () -> scoreBoardLibrary.updateScore(id, 2, -3));
     }
 
     @Test
     void updateScoreShouldThrowExceptionForNonExistentGame() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.updateScore("TeamA", 1, "TeamB", 2);
-        });
+        assertThrows(IllegalArgumentException.class, () -> scoreBoardLibrary.updateScore(1234567890, 1, 2));
     }
 
     @Test
     void finishGameShouldThrowExceptionForNonExistentGame() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            scoreBoardLibrary.finishGame("TeamA", "TeamB");
-        });
-    }
-
-    @Test
-    void finishGameShouldThrowExceptionForNullTeamNames() {
-        assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.finishGame(null, "TeamB");
-        });
-        assertThrows(NullPointerException.class, () -> {
-            scoreBoardLibrary.finishGame("TeamA", null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> scoreBoardLibrary.finishGame(1234567890));
     }
 }

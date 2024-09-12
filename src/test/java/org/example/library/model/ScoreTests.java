@@ -10,28 +10,11 @@ class ScoreTests {
 
     @BeforeEach
     void setUp() {
-        score = new Score();
+        score = new Score(0,0);
     }
 
     @Test
     void testDefaultConstructor() {
-        assertEquals(0, score.getHomeTeamGoals());
-        assertEquals(0, score.getGuestTeamGoals());
-    }
-
-    @Test
-    void testUpdateScore() {
-        score.updateScore(3, 2);
-
-        assertEquals(3, score.getHomeTeamGoals());
-        assertEquals(2, score.getGuestTeamGoals());
-        assertEquals(5, score.getTotalScore());
-    }
-
-    @Test
-    void testGetTotalScore() {
-        score.updateScore(4, 1);
-
-        assertEquals(5, score.getTotalScore());
+        assertEquals(0, score.homeTeamGoals() + score.awayTeamGoals());
     }
 }

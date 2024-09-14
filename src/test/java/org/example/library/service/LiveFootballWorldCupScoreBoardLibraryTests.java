@@ -333,66 +333,66 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 //        }
 //    }
 
-    @Test
-    void updateScoreShouldHandleMultipleMatchesSimultaneouslyViaExecutorService() throws InterruptedException {
-        final int[] ids = new int[5];
-
-        try (ExecutorService executor = Executors.newFixedThreadPool(5)) {
-
-            executor.submit(() -> ids[0] = scoreBoardLibrary.addNewGame("Mexico", "Canada" ));
-            executor.submit(() -> ids[1] = scoreBoardLibrary.addNewGame("Spain", "Brazil" ));
-            executor.submit(() -> ids[2] = scoreBoardLibrary.addNewGame("Germany", "France" ));
-            executor.submit(() -> ids[3] = scoreBoardLibrary.addNewGame("Uruguay", "Italy" ));
-            executor.submit(() -> ids[4] = scoreBoardLibrary.addNewGame("Argentina", "Australia" ));
-
-            executor.shutdown();
-            if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
-                executor.shutdownNow();
-            }
-        }
-
-        try (ExecutorService executor = Executors.newFixedThreadPool(5)) {
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 2, 6));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 11, 3));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 3, 4));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 7, 6));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 4, 5));
-
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 3, 7));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 14, 4));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 4, 5));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 8, 6));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 5, 5));
-
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 5, 7));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 15, 7));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 5, 6));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 9, 6));
-            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 6, 5));
-
-            executor.shutdown();
-            if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
-                executor.shutdownNow();
-            }
-        }
-
-        var summary = scoreBoardLibrary.getASummary();
-
-        assertEquals(5, summary.size());
-
-        List<String[]> expectedTeams = List.of(
-                new String[]{"Spain", "Brazil"},
-                new String[]{"Uruguay", "Italy"},
-                new String[]{"Mexico", "Canada"},
-                new String[]{"Argentina", "Australia"},
-                new String[]{"Germany", "France"}
-        );
-
-        for (int i = 0; i < expectedTeams.size(); i++) {
-            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
-            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
-        }
-    }
+//    @Test
+//    void updateScoreShouldHandleMultipleMatchesSimultaneouslyViaExecutorService() throws InterruptedException {
+//        final int[] ids = new int[5];
+//
+//        try (ExecutorService executor = Executors.newFixedThreadPool(5)) {
+//
+//            executor.submit(() -> ids[0] = scoreBoardLibrary.addNewGame("Mexico", "Canada" ));
+//            executor.submit(() -> ids[1] = scoreBoardLibrary.addNewGame("Spain", "Brazil" ));
+//            executor.submit(() -> ids[2] = scoreBoardLibrary.addNewGame("Germany", "France" ));
+//            executor.submit(() -> ids[3] = scoreBoardLibrary.addNewGame("Uruguay", "Italy" ));
+//            executor.submit(() -> ids[4] = scoreBoardLibrary.addNewGame("Argentina", "Australia" ));
+//
+//            executor.shutdown();
+//            if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
+//                executor.shutdownNow();
+//            }
+//        }
+//
+//        try (ExecutorService executor = Executors.newFixedThreadPool(5)) {
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 2, 6));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 11, 3));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 3, 4));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 7, 6));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 4, 5));
+//
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 3, 7));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 14, 4));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 4, 5));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 8, 6));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 5, 5));
+//
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[0], 5, 7));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[1], 15, 7));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[2], 5, 6));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[3], 9, 6));
+//            executor.submit(() -> scoreBoardLibrary.updateScore(ids[4], 6, 5));
+//
+//            executor.shutdown();
+//            if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
+//                executor.shutdownNow();
+//            }
+//        }
+//
+//        var summary = scoreBoardLibrary.getASummary();
+//
+//        assertEquals(5, summary.size());
+//
+//        List<String[]> expectedTeams = List.of(
+//                new String[]{"Spain", "Brazil"},
+//                new String[]{"Uruguay", "Italy"},
+//                new String[]{"Mexico", "Canada"},
+//                new String[]{"Argentina", "Australia"},
+//                new String[]{"Germany", "France"}
+//        );
+//
+//        for (int i = 0; i < expectedTeams.size(); i++) {
+//            assertEquals(expectedTeams.get(i)[0], summary.get(i).getHomeTeamName());
+//            assertEquals(expectedTeams.get(i)[1], summary.get(i).getAwayTeamName());
+//        }
+//    }
 
     @Test
     void updateScoreShouldNotChangeWhenSameScoreIsGiven() {

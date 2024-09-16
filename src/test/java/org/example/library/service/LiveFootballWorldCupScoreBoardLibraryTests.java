@@ -18,7 +18,7 @@ public class LiveFootballWorldCupScoreBoardLibraryTests {
 
     @BeforeEach
     void setUp() {
-        scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary(new LiveGameManager());
+        scoreBoardLibrary = new LiveFootballWorldCupScoreBoardLibrary();
     }
 
     @Test

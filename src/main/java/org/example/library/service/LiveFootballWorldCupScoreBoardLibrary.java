@@ -1,16 +1,18 @@
 package org.example.library.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.example.library.model.Game;
 import org.example.library.model.GameSummary;
 import java.util.List;
 
+@ApplicationScoped
 public final class LiveFootballWorldCupScoreBoardLibrary {
 
     private final GameManager gameManager;
     private final GameSummary gameSummary;
 
-    public LiveFootballWorldCupScoreBoardLibrary(GameManager gameManager) {
-        this.gameManager = gameManager;
+    public LiveFootballWorldCupScoreBoardLibrary() {
+        this.gameManager = new LiveGameManager();
         this.gameSummary = new GameSummary();
     }
 

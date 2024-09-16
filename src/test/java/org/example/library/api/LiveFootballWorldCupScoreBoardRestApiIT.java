@@ -1,8 +1,8 @@
-package org.example.library;
+package org.example.library.api;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class GreetingResourceIT extends GreetingResourceTest {
+class LiveFootballWorldCupScoreBoardRestApiIT extends LiveFootballWorldCupScoreBoardRestApiTest {
     // Execute the same tests but in packaged mode.
 }
